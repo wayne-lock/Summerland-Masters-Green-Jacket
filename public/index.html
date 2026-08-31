@@ -542,101 +542,178 @@ function drawGolfers(){
       .trim()
       .toLowerCase();
 
-
   $("golferList").innerHTML = "";
 
-
-  golfers
-
-    .filter(
+  const matches =
+    golfers.filter(
       g =>
         !q ||
         g.name
           .toLowerCase()
           .includes(q)
-    )
+    );
 
-    .slice(0,10)
+  const pageSize = 10;
 
-    .forEach(g => {
+  if (typeof window.golferPage !== "number") {
+    window.golferPage = 0;
+  }
 
+  if (q) {
+    window.golferPage = 0;
+  }
 
-      const on =
-        selected.some(
-          id =>
-            String(id) === String(g.id)
-        );
+  const totalPages =
+    Math.max(
+      1,
+      Math.ceil(matches.length / pageSize)
+    );
 
+  if (window.golferPage >= totalPages) {
+    window.golferPage = totalPages - 1;
+  }
 
-      const row =
-        document.createElement("div");
+  const start =
+    window.golferPage * pageSize;
 
-      row.className = "golfer";
+  const pageGolfers =
+    matches.slice(
+      start,
+      start + pageSize
+    );
 
+  pageGolfers.forEach(g => {
 
-      const label =
-        document.createElement("strong");
-
-      label.textContent = g.name;
-
-      row.appendChild(label);
-
-
-      const btn =
-        document.createElement("button");
-
-      btn.type = "button";
-
-      btn.textContent =
-        on ? "Selected" : "Add";
-
-
-      btn.disabled =
-        locked ||
-        (!on && selected.length >= 14);
-
-
-      if(on)
-        btn.classList.add("primary");
-
-
-      btn.addEventListener(
-        "click",
-        () => {
-
-          if(on){
-
-            selected =
-              selected.filter(
-                x =>
-                  String(x) !==
-                  String(g.id)
-              );
-
-          }
-          else if(selected.length < 14){
-
-            selected.push(
-              String(g.id)
-            );
-
-          }
-
-
-          renderSelected();
-
-          drawGolfers();
-
-        }
+    const on =
+      selected.some(
+        id =>
+          String(id) === String(g.id)
       );
 
+    const row =
+      document.createElement("div");
 
-      row.appendChild(btn);
+    row.className = "golfer";
 
-      $("golferList")
-        .appendChild(row);
+    const label =
+      document.createElement("strong");
 
-    });
+    label.textContent = g.name;
+
+    row.appendChild(label);
+
+    const btn =
+      document.createElement("button");
+
+    btn.type = "button";
+
+    btn.textContent =
+      on ? "Selected" : "Add";
+
+    btn.disabled =
+      locked ||
+      (!on && selected.length >= 14);
+
+    if (on) {
+      btn.classList.add("primary");
+    }
+
+    btn.addEventListener(
+      "click",
+      () => {
+
+        if (on) {
+          selected =
+            selected.filter(
+              x =>
+                String(x) !==
+                String(g.id)
+            );
+        }
+        else if (selected.length < 14) {
+          selected.push(
+            String(g.id)
+          );
+        }
+
+        renderSelected();
+        drawGolfers();
+
+      }
+    );
+
+    row.appendChild(btn);
+
+    $("golferList")
+      .appendChild(row);
+
+  });
+
+  if (!q && matches.length > pageSize) {
+
+    const nav =
+      document.createElement("div");
+
+    nav.style.display = "flex";
+    nav.style.justifyContent = "space-between";
+    nav.style.alignItems = "center";
+    nav.style.gap = "10px";
+    nav.style.marginTop = "14px";
+
+    const prev =
+      document.createElement("button");
+
+    prev.type = "button";
+    prev.textContent = "Previous 10";
+    prev.disabled = window.golferPage === 0;
+
+    prev.addEventListener(
+      "click",
+      () => {
+        window.golferPage--;
+        drawGolfers();
+      }
+    );
+
+    const pageLabel =
+      document.createElement("span");
+
+    const from = start + 1;
+    const to =
+      Math.min(
+        start + pageSize,
+        matches.length
+      );
+
+    pageLabel.textContent =
+      `Golfers ${from}–${to}`;
+
+    const next =
+      document.createElement("button");
+
+    next.type = "button";
+    next.textContent = "Next 10";
+
+    next.disabled =
+      window.golferPage >=
+      totalPages - 1;
+
+    next.addEventListener(
+      "click",
+      () => {
+        window.golferPage++;
+        drawGolfers();
+      }
+    );
+
+    nav.appendChild(prev);
+    nav.appendChild(pageLabel);
+    nav.appendChild(next);
+
+    $("golferList")
+      .appendChild(nav);
+
+  }
 
 }
 
