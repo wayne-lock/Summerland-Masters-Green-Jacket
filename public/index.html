@@ -1,0 +1,1042 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>2027 Summerland Masters Green Jacket</title>
+
+<style>
+:root{
+  --green:#234f3b;
+  --cream:#f5f0e2;
+  --ink:#1e2923;
+  --muted:#67716b;
+  --line:#d7d9d4;
+  --white:#fff;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  background:#f4f5f2;
+  color:var(--ink);
+  font-family:Arial,Helvetica,sans-serif
+}
+
+header{
+  background:linear-gradient(135deg,#e9f0eb,#f8f4e9);
+  border-bottom:1px solid var(--line)
+}
+
+.wrap,main{
+  max-width:1050px;
+  margin:auto;
+  padding:18px
+}
+
+h1{
+  margin:0;
+  color:var(--green);
+  font-size:clamp(25px,5vw,42px)
+}
+
+h2{margin-top:0}
+
+.sub,.muted{color:var(--muted)}
+
+nav{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:15px
+}
+
+button,.btn{
+  font:inherit;
+  border:1px solid var(--green);
+  color:var(--green);
+  background:white;
+  border-radius:9px;
+  padding:10px 13px;
+  font-weight:700;
+  min-height:44px
+}
+
+button.primary,
+nav button.active{
+  background:var(--green);
+  color:white
+}
+
+button:disabled{opacity:.45}
+
+.card{
+  background:white;
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:16px;
+  margin-bottom:16px
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1.2fr .8fr;
+  gap:16px
+}
+
+.stat{
+  background:var(--cream);
+  border-radius:12px;
+  padding:14px
+}
+
+.big{
+  font-size:30px;
+  font-weight:800;
+  color:var(--green)
+}
+
+input{
+  width:100%;
+  padding:12px;
+  font:inherit;
+  border:1px solid var(--line);
+  border-radius:9px;
+  min-height:46px
+}
+
+.fieldgrid{
+  display:grid;
+  grid-template-columns:1fr 180px;
+  gap:10px
+}
+
+.notice{
+  background:var(--cream);
+  padding:10px;
+  border-radius:9px;
+  margin:10px 0
+}
+
+.golfer{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:10px 2px;
+  border-bottom:1px solid #eee
+}
+
+.selectedBox{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px
+}
+
+.chip{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  background:#eef3ef;
+  border-radius:999px;
+  padding:6px 8px 6px 10px
+}
+
+.chip button{
+  min-height:32px;
+  padding:3px 8px;
+  border-radius:999px
+}
+
+.status{
+  margin-top:10px;
+  font-weight:700
+}
+
+.ok{color:#17643b}
+.bad{color:#a12525}
+
+table{
+  width:100%;
+  border-collapse:collapse
+}
+
+th,td{
+  padding:10px 7px;
+  border-bottom:1px solid #eee;
+  text-align:left
+}
+
+th{
+  font-size:12px;
+  text-transform:uppercase;
+  color:var(--muted)
+}
+
+.hidden{display:none}
+
+.footerNote{
+  font-size:13px;
+  color:var(--muted);
+  margin-top:8px
+}
+
+@media(max-width:700px){
+  .grid,.fieldgrid{grid-template-columns:1fr}
+  .wrap,main{padding:14px}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<div class="wrap">
+
+<h1>🏌️ 2027 Summerland Masters Green Jacket</h1>
+
+<div class="sub">
+Pick 14 golfers. Lowest team score wins the jacket.
+</div>
+
+<nav>
+<button class="active" data-tab="leaderboard">Leaderboard</button>
+<button data-tab="pick">Pick My Team</button>
+<button data-tab="rules">Rules</button>
+</nav>
+
+</div>
+</header>
+
+<main>
+
+<section id="leaderboard">
+
+<div class="grid">
+
+<div class="card">
+
+<h2>Pool Leaderboard</h2>
+
+<div id="lbStatus" class="muted">
+Loading…
+</div>
+
+<div style="overflow:auto">
+
+<table>
+
+<thead>
+<tr>
+<th>Rank</th>
+<th>Player</th>
+<th>Team Score</th>
+<th>Behind</th>
+</tr>
+</thead>
+
+<tbody id="leaderRows"></tbody>
+
+</table>
+
+</div>
+</div>
+
+<div>
+
+<div class="stat">
+
+<div class="muted">Prize Pot</div>
+
+<div class="big" id="prize">$0</div>
+
+<div class="muted">
+<span id="entries">0</span> entries • 100% to winner
+</div>
+
+</div>
+
+<div class="card">
+
+<strong>Automatic scoring</strong>
+
+<p class="muted">
+Scores refresh through Netlify during tournament play.
+</p>
+
+<div id="syncTime" class="footerNote">
+Awaiting first sync
+</div>
+
+</div>
+
+</div>
+</div>
+
+</section>
+
+
+<section id="pick" class="hidden">
+
+<div class="card">
+
+<h2>Choose Your 14 Golfers</h2>
+
+<div class="fieldgrid">
+
+<label>
+Your name
+<input id="playerName"
+       autocomplete="name"
+       placeholder="e.g. Wayne">
+</label>
+
+<label>
+4-digit edit PIN
+<input id="pin"
+       inputmode="numeric"
+       maxlength="4"
+       placeholder="1234">
+</label>
+
+</div>
+
+<div class="footerNote">
+The PIN lets you reopen and change your own team before the deadline.
+</div>
+
+<div class="notice">
+
+<strong>
+Selected:
+<span id="count">0</span> / 14
+</strong>
+
+<span id="deadlineText" class="muted"></span>
+
+</div>
+
+
+<div id="selectedWrap" class="hidden">
+
+<h3>Your selected golfers</h3>
+
+<div id="selectedBox"
+     class="selectedBox">
+</div>
+
+</div>
+
+
+<label>
+Find a golfer
+
+<input id="golferSearch"
+       placeholder="Start typing a golfer's name…">
+
+</label>
+
+
+<div id="golferList"></div>
+
+
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px">
+
+<button id="loadTeam"
+        type="button">
+Open My Saved Team
+</button>
+
+<button id="submitTeam"
+        type="button"
+        class="primary"
+        disabled>
+Submit Team
+</button>
+
+</div>
+
+<div id="teamStatus"
+     class="status">
+</div>
+
+</div>
+
+</section>
+
+
+<section id="rules"
+         class="hidden">
+
+<div class="card">
+
+<h2>Rules</h2>
+
+<ol>
+
+<li>
+Choose any 14 golfers in that year's Masters field.
+</li>
+
+<li>
+One team per person.
+</li>
+
+<li>
+Entry fee: $20.
+</li>
+
+<li>
+All 14 golfers count toward the team total.
+</li>
+
+<li>
+If a golfer misses the cut, their recorded score still counts.
+</li>
+
+<li>
+The Masters champion gets a −2 bonus to his pool score.
+</li>
+
+<li>
+Lowest team total wins 100% of the prize money.
+</li>
+
+<li>
+Highest total earns the Team Duffer Award.
+</li>
+
+<li>
+A tie for first is settled by coin toss.
+</li>
+
+</ol>
+
+</div>
+
+</section>
+
+</main>
+
+
+<script>
+
+const $ = id => document.getElementById(id);
+
+let golfers = [];
+let selected = [];
+let locked = false;
+let config = {};
+
+
+document
+.querySelectorAll("nav button")
+.forEach(b =>
+  b.addEventListener("click", () => {
+
+    document
+      .querySelectorAll("nav button")
+      .forEach(x => x.classList.remove("active"));
+
+    b.classList.add("active");
+
+    ["leaderboard","pick","rules"]
+      .forEach(id =>
+        $(id).classList.toggle(
+          "hidden",
+          id !== b.dataset.tab
+        )
+      );
+
+  })
+);
+
+
+function showStatus(msg,ok=true){
+
+  $("teamStatus").textContent = msg;
+
+  $("teamStatus").className =
+    "status " + (ok ? "ok" : "bad");
+
+}
+
+
+function renderSelected(){
+
+  $("count").textContent = selected.length;
+
+  $("submitTeam").disabled =
+    locked || selected.length !== 14;
+
+  $("selectedWrap")
+    .classList.toggle(
+      "hidden",
+      selected.length === 0
+    );
+
+  $("selectedBox").innerHTML = "";
+
+
+  selected.forEach(id => {
+
+    const g =
+      golfers.find(
+        x => String(x.id) === String(id)
+      );
+
+    if(!g) return;
+
+
+    const chip =
+      document.createElement("div");
+
+    chip.className = "chip";
+
+
+    chip.append(
+      document.createTextNode(g.name)
+    );
+
+
+    const rm =
+      document.createElement("button");
+
+    rm.type = "button";
+
+    rm.textContent = "×";
+
+    rm.disabled = locked;
+
+
+    rm.addEventListener("click", () => {
+
+      selected =
+        selected.filter(
+          x => String(x) !== String(id)
+        );
+
+      renderSelected();
+
+      drawGolfers();
+
+    });
+
+
+    chip.appendChild(rm);
+
+    $("selectedBox")
+      .appendChild(chip);
+
+  });
+
+}
+
+
+function drawGolfers(){
+
+  const q =
+    $("golferSearch")
+      .value
+      .trim()
+      .toLowerCase();
+
+
+  $("golferList").innerHTML = "";
+
+
+  golfers
+
+    .filter(
+      g =>
+        !q ||
+        g.name
+          .toLowerCase()
+          .includes(q)
+    )
+
+    .slice(0,10)
+
+    .forEach(g => {
+
+
+      const on =
+        selected.some(
+          id =>
+            String(id) === String(g.id)
+        );
+
+
+      const row =
+        document.createElement("div");
+
+      row.className = "golfer";
+
+
+      const label =
+        document.createElement("strong");
+
+      label.textContent = g.name;
+
+      row.appendChild(label);
+
+
+      const btn =
+        document.createElement("button");
+
+      btn.type = "button";
+
+      btn.textContent =
+        on ? "Selected" : "Add";
+
+
+      btn.disabled =
+        locked ||
+        (!on && selected.length >= 14);
+
+
+      if(on)
+        btn.classList.add("primary");
+
+
+      btn.addEventListener(
+        "click",
+        () => {
+
+          if(on){
+
+            selected =
+              selected.filter(
+                x =>
+                  String(x) !==
+                  String(g.id)
+              );
+
+          }
+          else if(selected.length < 14){
+
+            selected.push(
+              String(g.id)
+            );
+
+          }
+
+
+          renderSelected();
+
+          drawGolfers();
+
+        }
+      );
+
+
+      row.appendChild(btn);
+
+      $("golferList")
+        .appendChild(row);
+
+    });
+
+}
+
+
+$("golferSearch")
+.addEventListener(
+  "input",
+  drawGolfers
+);
+
+
+async function init(){
+
+  try{
+
+    const [cr,gr] =
+      await Promise.all([
+
+        fetch("/.netlify/functions/config"),
+
+        fetch("/.netlify/functions/golfers")
+
+      ]);
+
+
+    config =
+      cr.ok
+        ? await cr.json()
+        : {
+            entryFee:20,
+            deadline:null
+          };
+
+
+    const gd =
+      gr.ok
+        ? await gr.json()
+        : {
+            golfers:[]
+          };
+
+
+    golfers =
+      (gd.golfers || [])
+        .sort(
+          (a,b) =>
+            a.name.localeCompare(b.name)
+        );
+
+
+    if(config.deadline){
+
+      locked =
+        Date.now() >=
+        new Date(
+          config.deadline
+        ).getTime();
+
+
+      $("deadlineText").textContent =
+        " • Deadline: " +
+        new Date(
+          config.deadline
+        ).toLocaleString();
+
+    }
+    else{
+
+      $("deadlineText").textContent =
+        " • Deadline will be set by the pool administrator.";
+
+    }
+
+
+    drawGolfers();
+
+    renderSelected();
+
+  }
+  catch(e){
+
+    showStatus(
+      "The site is not yet connected to the Netlify functions.",
+      false
+    );
+
+  }
+
+
+  loadLeaderboard();
+
+}
+
+
+$("submitTeam")
+.addEventListener(
+  "click",
+  async () => {
+
+
+    const name =
+      $("playerName")
+        .value
+        .trim();
+
+
+    const pin =
+      $("pin")
+        .value
+        .trim();
+
+
+    if(!name){
+
+      showStatus(
+        "Enter your name.",
+        false
+      );
+
+      return;
+
+    }
+
+
+    if(!/^\d{4}$/.test(pin)){
+
+      showStatus(
+        "Enter a 4-digit edit PIN.",
+        false
+      );
+
+      return;
+
+    }
+
+
+    if(selected.length !== 14){
+
+      showStatus(
+        "Select exactly 14 golfers.",
+        false
+      );
+
+      return;
+
+    }
+
+
+    $("submitTeam").disabled = true;
+
+
+    showStatus("Saving…");
+
+
+    try{
+
+      const r =
+        await fetch(
+          "/.netlify/functions/team",
+          {
+            method:"POST",
+
+            headers:{
+              "content-type":
+              "application/json"
+            },
+
+            body:JSON.stringify({
+              name,
+              pin,
+              golferIds:selected
+            })
+          }
+        );
+
+
+      const d =
+        await r.json();
+
+
+      if(!r.ok)
+        throw new Error(
+          d.error ||
+          "Could not save team."
+        );
+
+
+      showStatus(
+        "Team saved successfully. You can reopen and edit it until the deadline."
+      );
+
+
+      loadLeaderboard();
+
+    }
+    catch(e){
+
+      showStatus(
+        e.message,
+        false
+      );
+
+    }
+    finally{
+
+      renderSelected();
+
+    }
+
+  }
+);
+
+
+$("loadTeam")
+.addEventListener(
+  "click",
+  async () => {
+
+
+    const name =
+      $("playerName")
+        .value
+        .trim();
+
+
+    const pin =
+      $("pin")
+        .value
+        .trim();
+
+
+    if(
+      !name ||
+      !/^\d{4}$/.test(pin)
+    ){
+
+      showStatus(
+        "Enter your name and 4-digit PIN first.",
+        false
+      );
+
+      return;
+
+    }
+
+
+    showStatus(
+      "Opening saved team…"
+    );
+
+
+    try{
+
+      const r =
+        await fetch(
+
+          `/.netlify/functions/team?name=${encodeURIComponent(name)}&pin=${encodeURIComponent(pin)}`
+
+        );
+
+
+      const d =
+        await r.json();
+
+
+      if(!r.ok)
+        throw new Error(
+          d.error ||
+          "Could not open team."
+        );
+
+
+      if(!d.found){
+
+        showStatus(
+          "No saved team found for that name."
+        );
+
+        return;
+
+      }
+
+
+      selected =
+        (d.golferIds || [])
+          .map(String);
+
+
+      locked =
+        !!d.locked;
+
+
+      renderSelected();
+
+      drawGolfers();
+
+
+      showStatus(
+
+        locked
+
+        ? "Team opened. The deadline has passed, so it is locked."
+
+        : "Saved team opened. You may edit it before the deadline."
+
+      );
+
+    }
+    catch(e){
+
+      showStatus(
+        e.message,
+        false
+      );
+
+    }
+
+  }
+);
+
+
+async function loadLeaderboard(){
+
+  try{
+
+    const r =
+      await fetch(
+        "/.netlify/functions/leaderboard"
+      );
+
+
+    if(!r.ok)
+      throw new Error();
+
+
+    const d =
+      await r.json();
+
+
+    $("prize").textContent =
+      "$" + (d.prize || 0);
+
+
+    $("entries").textContent =
+      d.entries || 0;
+
+
+    $("syncTime").textContent =
+      d.lastSync
+        ? "Updated " +
+          new Date(
+            d.lastSync
+          ).toLocaleString()
+        : "Awaiting first sync";
+
+
+    $("leaderRows").innerHTML =
+      "";
+
+
+    (d.rows || [])
+      .forEach(x => {
+
+        const tr =
+          document.createElement("tr");
+
+
+        tr.innerHTML =
+
+          `<td>${x.rank}</td>
+           <td>${x.name}</td>
+           <td><strong>${x.scoreDisplay}</strong></td>
+           <td>${x.behindDisplay}</td>`;
+
+
+        $("leaderRows")
+          .appendChild(tr);
+
+      });
+
+
+    $("lbStatus").textContent =
+      (d.rows || []).length
+        ? ""
+        : "No teams entered yet.";
+
+  }
+  catch(e){
+
+    $("lbStatus").textContent =
+      "Leaderboard will activate when Netlify functions are connected.";
+
+  }
+
+}
+
+
+init();
+
+</script>
+
+</body>
+</html>
