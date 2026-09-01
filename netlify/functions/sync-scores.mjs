@@ -119,40 +119,71 @@ export default async () => {
     );
 
     if (scoring.players.length) {
-      const current =
-        await readJSON(
-          "golfers",
-          []
-        );
+  const current =
+    await readJSON(
+      "golfers",
+      []
+    );
 
-      const next =
-        scoring.players
-          .map(p => ({
-            id: p.id,
-            name: p.name,
-            status: "active"
-          }))
-          .sort(
-            (a,b) =>
-              a.name.localeCompare(
-                b.name
-              )
-          );
+  const existingByName =
+    new Map(
+      current
+        .map(g => {
+          const name =
+            typeof g === "string"
+              ? g
+              : g?.name;
 
-      if (
-        !current.length ||
-        current.some(
-          g =>
-            String(g.id)
-              .startsWith("demo-")
-        )
-      ) {
-        await writeJSON(
-          "golfers",
-          next
-        );
-      }
-    }
+          return [
+            String(name || "")
+              .trim()
+              .toLowerCase(),
+            g
+          ];
+        })
+        .filter(([key]) => key)
+    );
+
+  const next =
+    scoring.players
+      .map(p => {
+        const key =
+          String(p.name || "")
+            .trim()
+            .toLowerCase();
+
+        const existing =
+          existingByName.get(key);
+
+        return {
+          ...(
+            existing &&
+            typeof existing === "object"
+              ? existing
+              : {}
+          ),
+          id:
+            existing &&
+            typeof existing === "object" &&
+            existing.id
+              ? existing.id
+              : p.id,
+          name: p.name,
+          status: "active"
+        };
+      })
+      .sort(
+        (a,b) =>
+          a.name.localeCompare(
+            b.name
+          )
+      );
+
+  await writeJSON(
+    "golfers",
+    next
+  );
+}
 
     return Response.json({
       ok: true,
