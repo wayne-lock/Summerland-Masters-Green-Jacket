@@ -281,7 +281,7 @@ Awaiting first sync
 
 <div class="card">
 
-<h2>Choose Your 14 Golfers</h2>
+<h2 id="pickHeading">Choose Your 14 Golfers</h2
 
 <div class="fieldgrid">
 
@@ -310,7 +310,7 @@ The PIN lets you reopen and change your own team before the deadline.
 
 <strong>
 Selected:
-<span id="count">0</span> / 14
+<span id="count">0</span> / <span id="teamSizeCount">14</span>
 </strong>
 
 <span id="deadlineText" class="muted"></span>
@@ -376,7 +376,7 @@ Submit Team
 <ol>
 
 <li>
-Choose any 14 golfers in that year's Masters field.
+<span id="rulePickCount">Choose any 14 golfers in that year's Masters field.</span>
 </li>
 
 <li>
@@ -388,7 +388,7 @@ Entry fee: $20.
 </li>
 
 <li>
-All 14 golfers count toward the team total.
+<span id="ruleCountTotal">All 14 golfers count toward the team total.</span>
 </li>
 
 <li>
@@ -468,7 +468,7 @@ function renderSelected(){
   $("count").textContent = selected.length;
 
   $("submitTeam").disabled =
-    locked || selected.length !== 14;
+    locked || selected.length !== config.teamSize;
 
   $("selectedWrap")
     .classList.toggle(
@@ -612,7 +612,7 @@ function drawGolfers(){
 
     btn.disabled =
       locked ||
-      (!on && selected.length >= 14);
+      (!on && selected.length >= config.teamSize);
 
     if (on) {
       btn.classList.add("primary");
@@ -630,7 +630,7 @@ function drawGolfers(){
                 String(g.id)
             );
         }
-        else if (selected.length < 14) {
+        else if (selected.length < config.teamSize) {
           selected.push(
             String(g.id)
           );
@@ -742,12 +742,21 @@ async function init(){
     config =
       cr.ok
         ? await cr.json()
-        : {
-            entryFee:20,
-            deadline:null
-          };
+        :{
+  entryFee:20,
+  deadline:null,
+  teamSize:14
+};
+$("rulePickCount").textContent =
+  `Choose any ${config.teamSize} golfers in that year's Masters field.`;
 
+$("ruleCountTotal").textContent =
+  `All ${config.teamSize} golfers count toward the team total.`;
+$("pickHeading").textContent =
+  `Choose Your ${config.teamSize} Golfers`;
 
+$("teamSizeCount").textContent =
+  config.teamSize;
     const gd =
       gr.ok
         ? await gr.json()
@@ -850,10 +859,10 @@ $("submitTeam")
     }
 
 
-    if(selected.length !== 14){
+    if(selected.length !== config.teamSize){
 
       showStatus(
-        "Select exactly 14 golfers.",
+        `Select exactly ${config.teamSize} golfers.`,
         false
       );
 
