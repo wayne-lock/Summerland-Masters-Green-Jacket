@@ -196,7 +196,7 @@ th{
 
 <h1>🏌️ 2027 Summerland Masters Green Jacket</h1>
 
-<div class="sub">
+<div class="sub" id="poolSubtitle">
 Pick 14 golfers. Lowest team score wins the jacket.
 </div>
 
@@ -757,6 +757,8 @@ $("pickHeading").textContent =
 
 $("teamSizeCount").textContent =
   config.teamSize;
+  $("poolSubtitle").textContent =
+  `Pick ${config.teamSize} golfers. Lowest team score wins the jacket.`;  
     const gd =
       gr.ok
         ? await gr.json()
