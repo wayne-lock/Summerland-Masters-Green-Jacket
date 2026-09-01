@@ -92,12 +92,12 @@ export default async (req) => {
       );
     }
 
-    if (golferIds.length !== 14) {
-      return Response.json(
-        { error: "Exactly 14 golfers are required." },
-        { status: 400 }
-      );
-    }
+    if (golferIds.length !== config.teamSize) {
+  return Response.json(
+    { error: `Exactly ${config.teamSize} golfers are required.` },
+    { status: 400 }
+  );
+}
 
     if (deadlinePassed(config)) {
       return Response.json(
