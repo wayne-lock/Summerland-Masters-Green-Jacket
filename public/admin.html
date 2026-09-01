@@ -321,7 +321,19 @@
           </button>
 
         </div>
+<div class="actions">
+  <button
+    id="runTestScores"
+    type="button"
+  >
+    Run Test Scores
+  </button>
+</div>
 
+<div
+  id="testScoreStatus"
+  class="status"
+></div>
         <div
           id="golferStatus"
           class="status"
@@ -715,7 +727,52 @@ async function saveGolfers(){
   }
 
 }
+async function runTestScores(){
+  showStatus(
+    $("testScoreStatus"),
+    "Running test scores..."
+  );
 
+  try{
+    const response =
+      await fetch(
+        "/.netlify/functions/test-scores",
+        {
+          method:"POST",
+          headers:headers()
+        }
+      );
+
+    const data =
+      await response.json();
+
+    if(!response.ok){
+      throw new Error(
+        data.error ||
+        "Test scoring failed."
+      );
+    }
+
+    showStatus(
+      $("testScoreStatus"),
+      `Test scores loaded for ${data.count} golfers.`
+    );
+  }
+  catch(err){
+    showStatus(
+      $("testScoreStatus"),
+      err.message,
+      false
+    );
+  }
+}
+$("runTestScores")
+  .addEventListener(
+    "click",
+    runTestScores
+  );
+
+  
 $("openAdmin")
   .addEventListener(
     "click",
