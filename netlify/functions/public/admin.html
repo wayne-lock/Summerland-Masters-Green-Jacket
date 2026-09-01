@@ -1,0 +1,746 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Masters Pool Admin</title>
+
+  <style>
+    :root{
+      --green:#234f3b;
+      --cream:#f5f0e2;
+      --ink:#1e2923;
+      --muted:#67716b;
+      --line:#d7d9d4;
+      --white:#ffffff;
+    }
+
+    *{
+      box-sizing:border-box;
+    }
+
+    body{
+      margin:0;
+      font-family:
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+      background:#f7f7f4;
+      color:var(--ink);
+    }
+
+    .wrap{
+      max-width:760px;
+      margin:0 auto;
+      padding:24px 18px 50px;
+    }
+
+    h1{
+      margin:0 0 6px;
+      color:var(--green);
+      font-size:30px;
+    }
+
+    .sub{
+      color:var(--muted);
+      margin-bottom:24px;
+    }
+
+    .card{
+      background:var(--white);
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:20px;
+      margin-bottom:18px;
+    }
+
+    h2{
+      margin-top:0;
+      font-size:22px;
+    }
+
+    label{
+      display:block;
+      font-weight:700;
+      margin:14px 0 6px;
+    }
+
+    input,
+    textarea{
+      width:100%;
+      font:inherit;
+      padding:12px;
+      border:1px solid #bfc5c1;
+      border-radius:10px;
+      background:white;
+    }
+
+    textarea{
+      min-height:300px;
+      resize:vertical;
+      line-height:1.5;
+    }
+
+    button{
+      appearance:none;
+      border:1px solid var(--green);
+      background:white;
+      color:var(--green);
+      border-radius:10px;
+      padding:11px 16px;
+      font:inherit;
+      font-weight:700;
+      cursor:pointer;
+    }
+
+    button.primary{
+      background:var(--green);
+      color:white;
+    }
+
+    button:disabled{
+      opacity:.5;
+      cursor:not-allowed;
+    }
+
+    .row{
+      display:grid;
+      grid-template-columns:
+        repeat(2,minmax(0,1fr));
+      gap:14px;
+    }
+
+    .actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:18px;
+    }
+
+    .status{
+      margin-top:14px;
+      font-weight:700;
+    }
+
+    .good{
+      color:#21623c;
+    }
+
+    .bad{
+      color:#a12626;
+    }
+
+    .count{
+      margin-top:8px;
+      color:var(--muted);
+      font-weight:700;
+    }
+
+    .hidden{
+      display:none;
+    }
+
+    @media(max-width:600px){
+      .row{
+        grid-template-columns:1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="wrap">
+
+    <h1>Masters Pool Admin</h1>
+
+    <div class="sub">
+      Private administration for the
+      Summerland Masters Green Jacket.
+    </div>
+
+    <section class="card">
+
+      <h2>Admin Sign In</h2>
+
+      <label for="adminPin">
+        Admin PIN
+      </label>
+
+      <input
+        id="adminPin"
+        type="password"
+        inputmode="numeric"
+        maxlength="4"
+        placeholder="4-digit PIN"
+      >
+
+      <div class="actions">
+        <button
+          id="openAdmin"
+          class="primary"
+          type="button"
+        >
+          Open Admin
+        </button>
+      </div>
+
+      <div
+        id="loginStatus"
+        class="status"
+      ></div>
+
+    </section>
+
+    <section
+      id="adminArea"
+      class="hidden"
+    >
+
+      <section class="card">
+
+        <h2>Pool Settings</h2>
+
+        <div class="row">
+
+          <div>
+            <label for="year">
+              Tournament Year
+            </label>
+
+            <input
+              id="year"
+              type="number"
+              min="2027"
+              max="2100"
+            >
+          </div>
+
+          <div>
+            <label for="entryFee">
+              Entry Fee ($)
+            </label>
+
+            <input
+              id="entryFee"
+              type="number"
+              min="0"
+              step="1"
+            >
+          </div>
+
+        </div>
+
+        <div class="row">
+
+          <div>
+            <label for="teamSize">
+              Golfers Per Team
+            </label>
+
+            <input
+              id="teamSize"
+              type="number"
+              min="1"
+              max="50"
+            >
+          </div>
+
+          <div>
+            <label for="deadline">
+              Selection Deadline
+            </label>
+
+            <input
+              id="deadline"
+              type="datetime-local"
+            >
+          </div>
+
+        </div>
+
+        <label for="title">
+          Pool Title
+        </label>
+
+        <input
+          id="title"
+          type="text"
+        >
+
+        <div class="actions">
+
+          <button
+            id="saveSettings"
+            class="primary"
+            type="button"
+          >
+            Save Pool Settings
+          </button>
+
+        </div>
+
+        <div
+          id="settingsStatus"
+          class="status"
+        ></div>
+
+      </section>
+
+      <section class="card">
+
+        <h2>Masters Golfer Field</h2>
+
+        <p>
+          Enter one golfer per line.
+          The field size is determined automatically
+          from the names entered here.
+        </p>
+
+        <textarea
+          id="golferNames"
+          placeholder="Scottie Scheffler&#10;Rory McIlroy&#10;..."
+        ></textarea>
+
+        <div
+          id="golferCount"
+          class="count"
+        >
+          0 golfers
+        </div>
+
+        <div class="actions">
+
+          <button
+            id="saveGolfers"
+            class="primary"
+            type="button"
+          >
+            Save Golfer Field
+          </button>
+
+        </div>
+
+        <div
+          id="golferStatus"
+          class="status"
+        ></div>
+
+      </section>
+
+    </section>
+
+  </main>
+
+<script>
+
+const $ =
+  id => document.getElementById(id);
+
+let adminPin = "";
+
+function showStatus(
+  element,
+  message,
+  good = true
+){
+  element.textContent = message;
+
+  element.className =
+    "status " +
+    (good ? "good" : "bad");
+}
+
+function headers(){
+  return {
+    "content-type":
+      "application/json",
+    "x-admin-pin":
+      adminPin
+  };
+}
+
+function deadlineForInput(value){
+
+  if (!value) {
+    return "";
+  }
+
+  const d =
+    new Date(value);
+
+  if (
+    Number.isNaN(
+      d.getTime()
+    )
+  ){
+    return "";
+  }
+
+  const pad =
+    n =>
+      String(n)
+        .padStart(2,"0");
+
+  return (
+    d.getFullYear() +
+    "-" +
+    pad(d.getMonth()+1) +
+    "-" +
+    pad(d.getDate()) +
+    "T" +
+    pad(d.getHours()) +
+    ":" +
+    pad(d.getMinutes())
+  );
+}
+
+async function loadAdmin(){
+
+  adminPin =
+    $("adminPin")
+      .value
+      .trim();
+
+  if (
+    !/^\d{4}$/
+      .test(adminPin)
+  ){
+    showStatus(
+      $("loginStatus"),
+      "Enter your 4-digit admin PIN.",
+      false
+    );
+
+    return;
+  }
+
+  showStatus(
+    $("loginStatus"),
+    "Checking PIN..."
+  );
+
+  try{
+
+    const [
+      configResponse,
+      golferResponse
+    ] =
+      await Promise.all([
+        fetch(
+          "/.netlify/functions/admin-config",
+          {
+            headers:
+              headers()
+          }
+        ),
+
+        fetch(
+          "/.netlify/functions/admin-golfers",
+          {
+            headers:
+              headers()
+          }
+        )
+      ]);
+
+    if (
+      configResponse.status === 401 ||
+      golferResponse.status === 401
+    ){
+      throw new Error(
+        "Incorrect admin PIN."
+      );
+    }
+
+    if (
+      !configResponse.ok ||
+      !golferResponse.ok
+    ){
+      throw new Error(
+        "Unable to open admin settings."
+      );
+    }
+
+    const config =
+      await configResponse.json();
+
+    const golferData =
+      await golferResponse.json();
+
+    $("year").value =
+      config.year ?? 2027;
+
+    $("entryFee").value =
+      config.entryFee ?? 20;
+
+    $("teamSize").value =
+      config.teamSize ?? 14;
+
+    $("deadline").value =
+      deadlineForInput(
+        config.deadline
+      );
+
+    $("title").value =
+      config.title ||
+      "Summerland Masters Green Jacket";
+
+    const golfers =
+      Array.isArray(
+        golferData.golfers
+      )
+        ? golferData.golfers
+        : [];
+
+    $("golferNames").value =
+      golfers
+        .map(g => g.name)
+        .join("\n");
+
+    updateGolferCount();
+
+    $("adminArea")
+      .classList
+      .remove("hidden");
+
+    showStatus(
+      $("loginStatus"),
+      "Admin unlocked."
+    );
+
+  }
+  catch(error){
+
+    $("adminArea")
+      .classList
+      .add("hidden");
+
+    showStatus(
+      $("loginStatus"),
+      error.message,
+      false
+    );
+
+  }
+
+}
+
+async function saveSettings(){
+
+  const payload = {
+
+    year:
+      Number(
+        $("year").value
+      ),
+
+    entryFee:
+      Number(
+        $("entryFee").value
+      ),
+
+    teamSize:
+      Number(
+        $("teamSize").value
+      ),
+
+    deadline:
+      $("deadline").value
+        ? new Date(
+            $("deadline").value
+          ).toISOString()
+        : null,
+
+    title:
+      $("title")
+        .value
+        .trim()
+
+  };
+
+  showStatus(
+    $("settingsStatus"),
+    "Saving..."
+  );
+
+  try{
+
+    const response =
+      await fetch(
+        "/.netlify/functions/admin-config",
+        {
+          method:"POST",
+          headers:
+            headers(),
+          body:
+            JSON.stringify(
+              payload
+            )
+        }
+      );
+
+    const data =
+      await response
+        .json()
+        .catch(() => ({}));
+
+    if (!response.ok){
+      throw new Error(
+        data.error ||
+        "Unable to save settings."
+      );
+    }
+
+    showStatus(
+      $("settingsStatus"),
+      "Pool settings saved."
+    );
+
+  }
+  catch(error){
+
+    showStatus(
+      $("settingsStatus"),
+      error.message,
+      false
+    );
+
+  }
+
+}
+
+function getGolferNames(){
+
+  return (
+    $("golferNames")
+      .value
+      .split("\n")
+      .map(name =>
+        name.trim()
+      )
+      .filter(Boolean)
+  );
+
+}
+
+function updateGolferCount(){
+
+  const names =
+    getGolferNames();
+
+  $("golferCount")
+    .textContent =
+      names.length +
+      (
+        names.length === 1
+          ? " golfer"
+          : " golfers"
+      );
+
+}
+
+async function saveGolfers(){
+
+  const names =
+    getGolferNames();
+
+  if (!names.length){
+
+    showStatus(
+      $("golferStatus"),
+      "Enter at least one golfer.",
+      false
+    );
+
+    return;
+  }
+
+  showStatus(
+    $("golferStatus"),
+    "Saving golfer field..."
+  );
+
+  try{
+
+    const response =
+      await fetch(
+        "/.netlify/functions/admin-golfers",
+        {
+          method:"POST",
+          headers:
+            headers(),
+          body:
+            JSON.stringify({
+              names
+            })
+        }
+      );
+
+    const data =
+      await response
+        .json()
+        .catch(() => ({}));
+
+    if (!response.ok){
+      throw new Error(
+        data.error ||
+        "Unable to save golfer field."
+      );
+    }
+
+    $("golferNames").value =
+      data.golfers
+        .map(g => g.name)
+        .join("\n");
+
+    updateGolferCount();
+
+    showStatus(
+      $("golferStatus"),
+      data.count +
+      " golfers saved."
+    );
+
+  }
+  catch(error){
+
+    showStatus(
+      $("golferStatus"),
+      error.message,
+      false
+    );
+
+  }
+
+}
+
+$("openAdmin")
+  .addEventListener(
+    "click",
+    loadAdmin
+  );
+
+$("saveSettings")
+  .addEventListener(
+    "click",
+    saveSettings
+  );
+
+$("saveGolfers")
+  .addEventListener(
+    "click",
+    saveGolfers
+  );
+
+$("golferNames")
+  .addEventListener(
+    "input",
+    updateGolferCount
+  );
+
+</script>
+
+</body>
+</html>
