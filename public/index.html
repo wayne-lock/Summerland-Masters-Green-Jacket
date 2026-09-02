@@ -1095,7 +1095,14 @@ async function loadLeaderboard(){
         tr.innerHTML =
 
           `<td>${x.rank}</td>
-           <td>${x.name}</td>
+   <td>
+  ${x.name}
+  ${
+    Array.isArray(x.golfers) && x.golfers.length
+      ? '<div class="footerNote">' + x.golfers.join(", ") + '</div>'
+      : ""
+  }
+</td>       
            <td><strong>${x.scoreDisplay}</strong></td>
            <td>${x.behindDisplay}</td>`;
 
