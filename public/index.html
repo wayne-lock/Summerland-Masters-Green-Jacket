@@ -222,7 +222,81 @@ Pick 14 golfers. Lowest team score wins the jacket.
 </header>
 
 <main>
+<section id="authSection" class="hidden">
+  <div class="grid">
 
+    <div class="card">
+      <h2>Player Sign In</h2>
+
+      <form id="loginForm">
+        <label for="loginEmail">Email</label>
+        <input
+          id="loginEmail"
+          type="email"
+          autocomplete="email"
+          required
+        >
+
+        <label for="loginPassword">Password</label>
+        <input
+          id="loginPassword"
+          type="password"
+          autocomplete="current-password"
+          required
+        >
+
+        <button type="submit">Sign In</button>
+        <button type="button" id="forgotPassword">
+          Forgot Password
+        </button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2>Join the Pool</h2>
+
+      <form id="signupForm">
+        <label for="firstName">First Name</label>
+        <input
+          id="firstName"
+          type="text"
+          autocomplete="given-name"
+          required
+        >
+
+        <label for="lastName">Last Name</label>
+        <input
+          id="lastName"
+          type="text"
+          autocomplete="family-name"
+          required
+        >
+
+        <label for="signupEmail">Email</label>
+        <input
+          id="signupEmail"
+          type="email"
+          autocomplete="email"
+          required
+        >
+
+        <label for="signupPassword">Create Password</label>
+        <input
+          id="signupPassword"
+          type="password"
+          minlength="6"
+          autocomplete="new-password"
+          required
+        >
+
+        <button type="submit">Join the Pool</button>
+      </form>
+    </div>
+
+  </div>
+
+  <div id="authMessage" class="notice hidden"></div>
+</section>
 <section id="leaderboard">
 
 <div class="grid">
@@ -1161,7 +1235,150 @@ $("leaderRows").addEventListener("click", event => {
 
   
 });
+const C = window.POOL_CONFIG || {};
 
+const sb =
+  C.SUPABASE_URL &&
+  C.SUPABASE_PUBLISHABLE_KEY
+    ? supabase.createClient(
+        C.SUPABASE_URL,
+        C.SUPABASE_PUBLISHABLE_KEY
+      )
+    : null;
+
+function authMessage(text, isError = false) {
+  const box = $("authMessage");
+  if (!box) return;
+
+  box.textContent = text;
+  box.classList.remove("hidden");
+  box.style.fontWeight = isError ? "700" : "";
+}
+
+$("loginForm").onsubmit = async event => {
+  event.preventDefault();
+
+  if (!sb) return;
+
+  authMessage("Signing in...");
+
+  const { error } =
+    await sb.auth.signInWithPassword({
+      email: $("loginEmail").value.trim().toLowerCase(),
+      password: $("loginPassword").value
+    });
+
+  if (error) {
+    authMessage(error.message, true);
+  }
+};
+
+$("signupForm").onsubmit = async event => {
+  event.preventDefault();
+
+  if (!sb) return;
+
+  const email =
+    $("signupEmail").value.trim().toLowerCase();
+
+  const password =
+    $("signupPassword").value;
+
+  const firstName =
+    $("firstName").value.trim();
+
+  const lastName =
+    $("lastName").value.trim();
+
+  authMessage("Creating your account...");
+
+  const { data, error } =
+    await sb.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: window.location.origin,
+        data: {
+          first_name: firstName,
+          last_name: lastName,
+          player_name:
+            `${firstName} ${lastName}`.trim()
+        }
+      }
+    });
+
+  if (error) {
+    authMessage(error.message, true);
+    return;
+  }
+
+  authMessage(
+    data.session
+      ? "Your account is ready."
+      : "Success! Check your email for the confirmation link."
+  );
+};
+
+$("forgotPassword").onclick = async () => {
+  if (!sb) return;
+
+  const email =
+    $("loginEmail").value.trim().toLowerCase();
+
+  if (!email) {
+    authMessage(
+      "Enter your email address first.",
+      true
+    );
+    return;
+  }
+
+  const { error } =
+    await sb.auth.resetPasswordForEmail(
+      email,
+      {
+        redirectTo: window.location.origin
+      }
+    );
+
+  if (error) {
+    authMessage(error.message, true);
+    return;
+  }
+
+  authMessage(
+    "Password reset email sent. Check your inbox."
+  );
+};
+
+if (sb) {
+  sb.auth.onAuthStateChange(
+    async (event, session) => {
+      if (
+        event === "PASSWORD_RECOVERY" &&
+        session
+      ) {
+        const newPassword = window.prompt(
+          "Enter your new password (at least 6 characters):"
+        );
+
+        if (!newPassword) return;
+
+        const { error } =
+          await sb.auth.updateUser({
+            password: newPassword
+          });
+
+        authMessage(
+          error
+            ? error.message
+            : "Password updated successfully.",
+          Boolean(error)
+        );
+      }
+    }
+  );
+}
   
 init();
 
