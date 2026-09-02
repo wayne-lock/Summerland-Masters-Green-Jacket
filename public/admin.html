@@ -338,7 +338,18 @@
           id="golferStatus"
           class="status"
         ></div>
+<div class="card" style="margin-top:24px;">
+  <h2>Saved Participants</h2>
 
+  <div id="participantsList">
+    Loading participants...
+  </div>
+
+  <div
+    id="participantsStatus"
+    class="status"
+  ></div>
+</div>
       </section>
 
     </section>
@@ -437,7 +448,8 @@ async function loadAdmin(){
 
     const [
       configResponse,
-      golferResponse
+      golferResponse,
+      participantResponse
     ] =
       await Promise.all([
         fetch(
@@ -455,12 +467,21 @@ async function loadAdmin(){
               headers()
           }
         )
+        ,
+fetch(
+  "/.netlify/functions/admin-participants",
+  {
+    headers:
+      headers()
+  }
+)
       ]);
 
     if (
-      configResponse.status === 401 ||
-      golferResponse.status === 401
-    ){
+  configResponse.status === 401 ||
+  golferResponse.status === 401 ||
+  participantResponse.status === 401
+) {
       throw new Error(
         "Incorrect admin PIN."
       );
@@ -480,7 +501,8 @@ async function loadAdmin(){
 
     const golferData =
       await golferResponse.json();
-
+const participantData =
+  await participantResponse.json();
     $("year").value =
       config.year ?? 2027;
 
@@ -512,7 +534,50 @@ async function loadAdmin(){
         .join("\n");
 
     updateGolferCount();
+const participants =
+  Array.isArray(participantData.participants)
+    ? participantData.participants
+    : [];
 
+const participantsList =
+  $("participantsList");
+
+participantsList.innerHTML = "";
+
+if (!participants.length) {
+  participantsList.textContent =
+    "No saved participants.";
+} else {
+  participants.forEach(participant => {
+    const row =
+      document.createElement("div");
+
+    row.className = "actions";
+
+    const name =
+      document.createElement("strong");
+
+    name.textContent =
+      participant.name;
+
+    const button =
+      document.createElement("button");
+
+    button.type = "button";
+    button.textContent = "Remove";
+    button.dataset.key =
+      participant.key;
+    button.className =
+      "removeParticipant";
+
+    row.append(
+      name,
+      button
+    );
+
+    participantsList.appendChild(row);
+  });
+}
     $("adminArea")
       .classList
       .remove("hidden");
@@ -771,7 +836,70 @@ $("runTestScores")
     "click",
     runTestScores
   );
+$("participantsList")
+  .addEventListener(
+    "click",
+    async event => {
+      const button =
+        event.target.closest(
+          ".removeParticipant"
+        );
 
+      if (!button) return;
+
+      const key =
+        button.dataset.key;
+
+      const name =
+        button
+          .closest(".actions")
+          ?.querySelector("strong")
+          ?.textContent || key;
+
+      if (
+        !confirm(
+          `Remove ${name}?`
+        )
+      ) {
+        return;
+      }
+
+      try {
+        const response =
+          await fetch(
+            "/.netlify/functions/admin-participants",
+            {
+              method: "DELETE",
+              headers: headers(),
+              body: JSON.stringify({ key })
+            }
+          );
+
+        const data =
+          await response.json();
+
+        if (!response.ok) {
+          throw new Error(
+            data.error ||
+            "Unable to remove participant."
+          );
+        }
+
+        showStatus(
+          $("participantsStatus"),
+          `${data.removed} removed.`
+        );
+
+        await loadAdmin();
+      } catch (err) {
+        showStatus(
+          $("participantsStatus"),
+          err.message,
+          false
+        );
+      }
+    }
+  );
   
 $("openAdmin")
   .addEventListener(
