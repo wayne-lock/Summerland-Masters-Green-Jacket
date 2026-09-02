@@ -1101,13 +1101,13 @@ async function loadLeaderboard(){
 
           `<td>${x.rank}</td>
     <td>
+<span class="teamName" role="button">${x.name}</span>
 ${
   Array.isArray(x.golfers) && x.golfers.length
-    ? '<span class="teamName" role="button">' + x.name + '</span>' +
-      '<div class="footerNote teamPicks hidden">' +
+    ? '<div class="footerNote teamPicks hidden">' +
       x.golfers.join(", ") +
       '</div>'
-    : x.name
+    : ""
 }
 </td>
            <td><strong>${x.scoreDisplay}</strong></td>
