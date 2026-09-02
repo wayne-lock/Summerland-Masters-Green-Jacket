@@ -1102,16 +1102,15 @@ async function loadLeaderboard(){
         tr.innerHTML =
 
           `<td>${x.rank}</td>
-       <td>
-  ${x.name}
-  ${
-    Array.isArray(x.golfers) && x.golfers.length
-      ? '<div><button type="button" class="viewTeam">View Team</button>' +
-        '<div class="footerNote teamPicks hidden">' +
-        x.golfers.join(", ") +
-        '</div></div>'
-      : ""
-  }
+    <td>
+${
+  Array.isArray(x.golfers) && x.golfers.length
+    ? '<span class="teamName" role="button">' + x.name + '</span>' +
+      '<div class="footerNote teamPicks hidden">' +
+      x.golfers.join(", ") +
+      '</div>'
+    : x.name
+}
 </td>
            <td><strong>${x.scoreDisplay}</strong></td>
            <td>${x.behindDisplay}</td>`;
@@ -1139,20 +1138,19 @@ async function loadLeaderboard(){
 }
 
 $("leaderRows").addEventListener("click", event => {
-  const button = event.target.closest(".viewTeam");
+  const teamName = event.target.closest(".teamName");
 
-  if (!button) return;
+  if (!teamName) return;
 
   const picks =
-    button.parentElement.querySelector(".teamPicks");
+    teamName.parentElement.querySelector(".teamPicks");
 
   if (!picks) return;
 
   const isHidden =
     picks.classList.toggle("hidden");
 
-  button.textContent =
-    isHidden ? "View Team" : "Hide Team";
+  
 });
 
   
