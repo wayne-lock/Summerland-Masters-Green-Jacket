@@ -1101,7 +1101,11 @@ async function loadLeaderboard(){
 
           `<td>${x.rank}</td>
     <td>
-<span class="teamName" role="button">${x.name}</span>
+${
+  Array.isArray(x.golfers) && x.golfers.length
+    ? '<span class="teamName" role="button">' + x.name + '</span>'
+    : x.name
+}
 ${
   Array.isArray(x.golfers) && x.golfers.length
     ? '<div class="footerNote teamPicks hidden">' +
