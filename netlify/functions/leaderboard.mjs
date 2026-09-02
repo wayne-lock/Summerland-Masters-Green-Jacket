@@ -12,7 +12,17 @@ export default async () => {
   });
 
   const teams = await readJSON("teams", {});
-
+const golfers = await readJSON("golfers", []);
+  const golferNamesById = new Map(
+  golfers.map(g => [
+    String(g.id),
+    g.name
+  ])
+);
+  const deadlinePassed =
+  config.deadline
+    ? Date.now() >= new Date(config.deadline).getTime()
+    : false;
   const scoring = await readJSON("scores", {
     players: [],
     lastSync: null,
@@ -48,11 +58,16 @@ export default async () => {
         counted++;
       }
 
-      return {
-        name: t.name,
-        score: counted ? total : null,
-        counted
-      };
+    return {
+  name: t.name,
+  score: counted ? total : null,
+  counted,
+  golfers: deadlinePassed
+    ? (t.golferIds || [])
+        .map(id => golferNamesById.get(String(id)))
+        .filter(Boolean)
+    : []
+};
     })
     .sort(
       (a,b) =>
