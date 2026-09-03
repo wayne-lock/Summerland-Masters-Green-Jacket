@@ -368,7 +368,7 @@ Awaiting first sync
 <div class="card">
 
 <h2 id="pickHeading">Choose Your 14 Golfers</h2
-
+<div id="signedInPlayer" class="muted"></div>
 
 
 <div class="notice">
@@ -793,7 +793,20 @@ $("golferSearch")
 async function init(){
 
   try{
+if (sb) {
+  const { data } = await sb.auth.getUser();
+  const user = data?.user;
 
+  const playerName =
+    user?.user_metadata?.player_name ||
+    user?.email?.split("@")[0] ||
+    "";
+
+  $("signedInPlayer").textContent =
+    playerName
+      ? `Signed in as ${playerName}`
+      : "";
+}
     const [cr,gr] =
       await Promise.all([
 
@@ -890,40 +903,7 @@ $("submitTeam")
   async () => {
 
 
-    const name =
-      $("playerName")
-        .value
-        .trim();
-
-
-    const pin =
-      $("pin")
-        .value
-        .trim();
-
-
-    if(!name){
-
-      showStatus(
-        "Enter your name.",
-        false
-      );
-
-      return;
-
-    }
-
-
-    if(!/^\d{4}$/.test(pin)){
-
-      showStatus(
-        "Enter a 4-digit edit PIN.",
-        false
-      );
-
-      return;
-
-    }
+    
 
 
     if(selected.length !== config.teamSize){
@@ -1237,6 +1217,20 @@ $("loginForm").onsubmit = async event => {
   if (error) {
     authMessage(error.message, true);
   }
+  else {
+  const { data } = await sb.auth.getUser();
+  const user = data?.user;
+
+  const playerName =
+    user?.user_metadata?.player_name ||
+    user?.email?.split("@")[0] ||
+    "";
+
+  $("signedInPlayer").textContent =
+    playerName
+      ? `Signed in as ${playerName}`
+      : "";
+}
 };
 
 $("signupForm").onsubmit = async event => {
