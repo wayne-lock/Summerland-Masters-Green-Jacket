@@ -1,5 +1,5 @@
 import { readJSON, writeJSON } from "./_store.mjs";
-import crypto from "node:crypto";
+
 
 function keyName(name) {
   return String(name || "")
@@ -9,11 +9,34 @@ function keyName(name) {
     .replace(/^-|-$/g, "");
 }
 
-function hashPin(pin) {
-  return crypto
-    .createHash("sha256")
-    .update(String(pin))
-    .digest("hex");
+const SUPABASE_URL =
+  "https://rgdqzqbzqobzobahgbsq.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+  "sb_publishable_cexIwuREWj_tQS-CMSkL7w_mdkx6YXF";
+
+async function getSignedInUser(req) {
+  const authorization =
+    req.headers.get("authorization") || "";
+
+  if (!authorization.startsWith("Bearer ")) {
+    return null;
+  }
+
+  const response = await fetch(
+    `${SUPABASE_URL}/auth/v1/user`,
+    {
+      headers: {
+        Authorization: authorization,
+        apikey: SUPABASE_PUBLISHABLE_KEY
+      }
+    }
+  );
+
+  if (!response.ok) return null;
+
+  const user = await response.json();
+  return user || null;
 }
 
 function deadlinePassed(config) {
@@ -30,131 +53,132 @@ export default async (req) => {
   });
 
   if (req.method === "GET") {
-    const name = url.searchParams.get("name") || "";
-    const pin = url.searchParams.get("pin") || "";
-    const key = keyName(name);
+  const user = await getSignedInUser(req);
 
-    if (!key) {
-      return Response.json(
-        { error: "Name required" },
-        { status: 400 }
-      );
-    }
+  if (!user) {
+    return Response.json(
+      { error: "Please sign in first." },
+      { status: 401 }
+    );
+  }
 
-    const teams = await readJSON("teams", {});
-    const team = teams[key];
+  const teams = await readJSON("teams", {});
+  const team = teams[user.id];
 
-    if (!team) {
-      return Response.json({
-        found: false,
-        locked: deadlinePassed(config)
-      });
-    }
-
-    if (!pin || team.pinHash !== hashPin(pin)) {
-      return Response.json(
-        { error: "Incorrect PIN" },
-        { status: 403 }
-      );
-    }
-
+  if (!team) {
     return Response.json({
-      found: true,
-      locked: deadlinePassed(config),
-      name: team.name,
-      golferIds: team.golferIds,
-      submittedAt: team.submittedAt,
-      updatedAt: team.updatedAt
+      found: false,
+      locked: deadlinePassed(config)
     });
   }
 
-  if (req.method === "POST") {
-    const body = await req.json().catch(() => ({}));
-
-    const name = String(body.name || "").trim();
-    const pin = String(body.pin || "").trim();
-
-    const golferIds = Array.isArray(body.golferIds)
-      ? [...new Set(body.golferIds.map(String))]
-      : [];
-
-    if (name.length < 2) {
-      return Response.json(
-        { error: "Please enter your name." },
-        { status: 400 }
-      );
-    }
-
-    if (!/^\d{4}$/.test(pin)) {
-      return Response.json(
-        { error: "Use a 4-digit edit PIN." },
-        { status: 400 }
-      );
-    }
-
-    if (golferIds.length !== config.teamSize) {
-  return Response.json(
-    { error: `Exactly ${config.teamSize} golfers are required.` },
-    { status: 400 }
-  );
+  return Response.json({
+    found: true,
+    locked: deadlinePassed(config),
+    name: team.name,
+    golferIds: team.golferIds,
+    submittedAt: team.submittedAt,
+    updatedAt: team.updatedAt
+  });
 }
 
-    if (deadlinePassed(config)) {
-      return Response.json(
-        { error: "The selection deadline has passed. Teams are locked." },
-        { status: 423 }
-      );
-    }
+  if (req.method === "POST") {
+  const user = await getSignedInUser(req);
 
-    const field = await readJSON("golfers", []);
-    const valid = new Set(field.map(g => String(g.id)));
-
-    if (
-      field.length &&
-      golferIds.some(id => !valid.has(id))
-    ) {
-      return Response.json(
-        { error: "One or more golfer selections are invalid." },
-        { status: 400 }
-      );
-    }
-
-    const teams = await readJSON("teams", {});
-    const key = keyName(name);
-    const now = new Date().toISOString();
-    const existing = teams[key];
-
-    if (
-      existing &&
-      existing.pinHash !== hashPin(pin)
-    ) {
-      return Response.json(
-        {
-          error:
-            "That name is already registered with a different PIN."
-        },
-        { status: 409 }
-      );
-    }
-
-    teams[key] = {
-      name,
-      pinHash: hashPin(pin),
-      golferIds,
-      submittedAt: existing?.submittedAt || now,
-      updatedAt: now
-    };
-
-    await writeJSON("teams", teams);
-
-    return Response.json({
-      ok: true,
-      name,
-      golferIds,
-      submittedAt: teams[key].submittedAt,
-      updatedAt: now
-    });
+  if (!user) {
+    return Response.json(
+      { error: "Please sign in first." },
+      { status: 401 }
+    );
   }
+
+  const body = await req.json().catch(() => ({}));
+
+  const firstName =
+    String(user.user_metadata?.first_name || "").trim();
+
+  const lastName =
+    String(user.user_metadata?.last_name || "").trim();
+
+  const name =
+    String(
+      user.user_metadata?.player_name ||
+      `${firstName} ${lastName}`.trim() ||
+      user.email?.split("@")[0] ||
+      ""
+    ).trim();
+
+  const golferIds = Array.isArray(body.golferIds)
+    ? [...new Set(body.golferIds.map(String))]
+    : [];
+
+  if (name.length < 2) {
+    return Response.json(
+      { error: "Player name is missing from your account." },
+      { status: 400 }
+    );
+  }
+
+  if (golferIds.length !== config.teamSize) {
+    return Response.json(
+      {
+        error:
+          `Exactly ${config.teamSize} golfers are required.`
+      },
+      { status: 400 }
+    );
+  }
+
+  if (deadlinePassed(config)) {
+    return Response.json(
+      {
+        error:
+          "The selection deadline has passed. Teams are locked."
+      },
+      { status: 423 }
+    );
+  }
+
+  const field = await readJSON("golfers", []);
+  const valid =
+    new Set(field.map(g => String(g.id)));
+
+  if (
+    field.length &&
+    golferIds.some(id => !valid.has(id))
+  ) {
+    return Response.json(
+      {
+        error:
+          "One or more golfer selections are invalid."
+      },
+      { status: 400 }
+    );
+  }
+
+  const teams = await readJSON("teams", {});
+  const now = new Date().toISOString();
+  const existing = teams[user.id];
+
+  teams[user.id] = {
+    userId: user.id,
+    email: user.email || null,
+    name,
+    golferIds,
+    submittedAt: existing?.submittedAt || now,
+    updatedAt: now
+  };
+
+  await writeJSON("teams", teams);
+
+  return Response.json({
+    ok: true,
+    name,
+    golferIds,
+    submittedAt: teams[user.id].submittedAt,
+    updatedAt: now
+  });
+}
 
   return new Response(
     "Method not allowed",
