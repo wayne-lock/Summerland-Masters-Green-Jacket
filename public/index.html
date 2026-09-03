@@ -971,19 +971,21 @@ $("submitTeam")
         await fetch(
           "/.netlify/functions/team",
           {
-            method:"POST",
+  method:"POST",
 
-            headers:{
-              "content-type":
-              "application/json"
-            },
+  headers:{
+    "content-type":
+      "application/json",
+    "authorization":
+      `Bearer ${(
+        await sb.auth.getSession()
+      ).data.session?.access_token || ""}`
+  },
 
-            body:JSON.stringify({
-              name,
-              pin,
-              golferIds:selected
-            })
-          }
+  body:JSON.stringify({
+    golferIds:selected
+  })
+}
         );
 
 
@@ -1030,31 +1032,10 @@ $("loadTeam")
   async () => {
 
 
-    const name =
-      $("playerName")
-        .value
-        .trim();
+    
 
 
-    const pin =
-      $("pin")
-        .value
-        .trim();
-
-
-    if(
-      !name ||
-      !/^\d{4}$/.test(pin)
-    ){
-
-      showStatus(
-        "Enter your name and 4-digit PIN first.",
-        false
-      );
-
-      return;
-
-    }
+    
 
 
     showStatus(
@@ -1065,11 +1046,17 @@ $("loadTeam")
     try{
 
       const r =
-        await fetch(
-
-          `/.netlify/functions/team?name=${encodeURIComponent(name)}&pin=${encodeURIComponent(pin)}`
-
-        );
+  await fetch(
+    "/.netlify/functions/team",
+    {
+      headers: {
+        "authorization":
+          `Bearer ${(
+            await sb.auth.getSession()
+          ).data.session?.access_token || ""}`
+      }
+    }
+  );
 
 
       const d =
