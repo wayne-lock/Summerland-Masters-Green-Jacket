@@ -591,205 +591,317 @@ function renderSelected(){
 
     chip.appendChild(rm);
 
-    $("selectedBox")
-      .appendChild(chip);
+ $("selectedBox")
+  .appendChild(chip);
 
-  });
-
+});
 }
 
+$("golferSearch")
+  .addEventListener(
+    "input",
+    drawGolfers
+  );
 
-function drawGolfers(){
+function drawGolfers(){   
+
 
   const q =
-    $("golferSearch")
+    $("golferSearch"
       .value
       .trim()
       .toLowerCase();
 
-  $("golferList").innerHTML = "";
+  const list =
+    $("golferList");
 
-  const matches =
-    golfers.filter(
-      g =>
-        !q ||
-        g.name
-          .toLowerCase()
-          .includes(q)
-    );
+  list.innerHTML = "";
 
-  const pageSize = 10;
+  const groupInfo = [
+    {
+      key: "top20",
+      title: "Top 20",
+      max:
+        Number(
+          config.top20Max ?? 4
+        )
+    },
+    {
+      key: "next20",
+      title: "Next 20",
+      max:
+        Number(
+          config.next20Max ?? 4
+        )
+    },
+    {
+      key: "third20",
+      title: "Next 20",
+      max:
+        Number(
+          config.third20Max ?? 5
+        )
+    },
+    {
+      key: "remaining",
+      title: "Remaining Field",
+      max: null
+    }
+  ];
 
-  if (typeof window.golferPage !== "number") {
-    window.golferPage = 0;
-  }
+  function golferGroup(g){
 
-  if (q) {
-    window.golferPage = 0;
-  }
-
-  const totalPages =
-    Math.max(
-      1,
-      Math.ceil(matches.length / pageSize)
-    );
-
-  if (window.golferPage >= totalPages) {
-    window.golferPage = totalPages - 1;
-  }
-
-  const start =
-    window.golferPage * pageSize;
-
-  const pageGolfers =
-    matches.slice(
-      start,
-      start + pageSize
-    );
-
-  pageGolfers.forEach(g => {
-
-    const on =
-      selected.some(
-        id =>
-          String(id) === String(g.id)
-      );
-
-    const row =
-      document.createElement("div");
-
-    row.className = "golfer";
-
-    const label =
-      document.createElement("strong");
-
-    label.textContent = g.name;
-
-    row.appendChild(label);
-
-    const btn =
-      document.createElement("button");
-
-    btn.type = "button";
-
-    btn.textContent =
-      on ? "Selected" : "Add";
-
-    btn.disabled =
-      locked ||
-      (!on && selected.length >= config.teamSize);
-
-    if (on) {
-      btn.classList.add("primary");
+    if (
+      g.group === "top20" ||
+      g.group === "next20" ||
+      g.group === "third20"
+    ){
+      return g.group;
     }
 
-    btn.addEventListener(
-      "click",
-      () => {
+    return "remaining";
+  }
 
-        if (on) {
-          selected =
-            selected.filter(
-              x =>
-                String(x) !==
-                String(g.id)
-            );
-        }
-        else if (selected.length < config.teamSize) {
-          selected.push(
-            String(g.id)
-          );
-        }
+  function selectedInGroup(
+    groupKey
+  ){
 
-        renderSelected();
-        drawGolfers();
+    return selected
+      .map(id =>
+        golfers.find(
+          g =>
+            String(g.id) ===
+            String(id)
+        )
+      )
+      .filter(Boolean)
+      .filter(
+        g =>
+          golferGroup(g) ===
+          groupKey
+      )
+      .length;
+  }
 
-      }
+  let anyShown = false;
+
+  groupInfo.forEach(group => {
+
+    const groupGolfers =
+      golfers
+        .filter(
+          g =>
+            golferGroup(g) ===
+            group.key
+        )
+        .filter(
+          g =>
+            !q ||
+            g.name
+              .toLowerCase()
+              .includes(q)
+        );
+
+    if (!groupGolfers.length) {
+      return;
+    }
+
+    anyShown = true;
+
+    const heading =
+      document.createElement(
+        "div"
+      );
+
+    heading.style.marginTop =
+      "22px";
+
+    heading.style.marginBottom =
+      "10px";
+
+    heading.style.paddingBottom =
+      "7px";
+
+    heading.style.borderBottom =
+      "1px solid #d7d9d4";
+
+    const title =
+      document.createElement(
+        "strong"
+      );
+
+    const selectedCount =
+      selectedInGroup(
+        group.key
+      );
+
+    if (
+      group.max === null
+    ) {
+      title.textContent =
+        group.title;
+    }
+    else {
+      title.textContent =
+        `${group.title} — ${selectedCount} of ${group.max} max`;
+    }
+
+    heading.appendChild(
+      title
     );
 
-    row.appendChild(btn);
+    list.appendChild(
+      heading
+    );
 
-    $("golferList")
-      .appendChild(row);
+    groupGolfers.forEach(g => {
+
+      const on =
+        selected.some(
+          id =>
+            String(id) ===
+            String(g.id)
+        );
+
+      const row =
+        document.createElement(
+          "div"
+        );
+
+      row.className =
+        "golfer";
+
+      const label =
+        document.createElement(
+          "strong"
+        );
+
+      label.textContent =
+        g.name;
+
+      row.appendChild(
+        label
+      );
+
+      const btn =
+        document.createElement(
+          "button"
+        );
+
+      btn.type =
+        "button";
+
+      btn.textContent =
+        on
+          ? "Selected"
+          : "Add";
+
+      const groupFull =
+        group.max !== null &&
+        selectedCount >=
+          group.max;
+
+      btn.disabled =
+        locked ||
+        (
+          !on &&
+          selected.length >=
+            config.teamSize
+        ) ||
+        (
+          !on &&
+          groupFull
+        );
+
+      if (on) {
+        btn.classList.add(
+          "primary"
+        );
+      }
+
+      btn.addEventListener(
+        "click",
+        () => {
+
+          if (on) {
+
+            selected =
+              selected.filter(
+                id =>
+                  String(id) !==
+                  String(g.id)
+              );
+
+          }
+          else {
+
+            const currentGroupCount =
+              selectedInGroup(
+                group.key
+              );
+
+            if (
+              selected.length >=
+              config.teamSize
+            ) {
+              return;
+            }
+
+            if (
+              group.max !== null &&
+              currentGroupCount >=
+                group.max
+            ) {
+              return;
+            }
+
+            selected.push(
+              String(g.id)
+            );
+
+          }
+
+          renderSelected();
+          drawGolfers();
+
+        }
+      );
+
+      row.appendChild(
+        btn
+      );
+
+      list.appendChild(
+        row
+      );
+
+    });
 
   });
 
-  if (!q && matches.length > pageSize) {
+  if (!anyShown) {
 
-    const nav =
-      document.createElement("div");
-
-    nav.style.display = "flex";
-    nav.style.justifyContent = "space-between";
-    nav.style.alignItems = "center";
-    nav.style.gap = "10px";
-    nav.style.marginTop = "14px";
-
-    const prev =
-      document.createElement("button");
-
-    prev.type = "button";
-    prev.textContent = "Previous 10";
-    prev.disabled = window.golferPage === 0;
-
-    prev.addEventListener(
-      "click",
-      () => {
-        window.golferPage--;
-        drawGolfers();
-      }
-    );
-
-    const pageLabel =
-      document.createElement("span");
-
-    const from = start + 1;
-    const to =
-      Math.min(
-        start + pageSize,
-        matches.length
+    const empty =
+      document.createElement(
+        "div"
       );
 
-    pageLabel.textContent =
-      `Golfers ${from}–${to}`;
+    empty.className =
+      "muted";
 
-    const next =
-      document.createElement("button");
+    empty.style.marginTop =
+      "16px";
 
-    next.type = "button";
-    next.textContent = "Next 10";
+    empty.textContent =
+      "No golfers found.";
 
-    next.disabled =
-      window.golferPage >=
-      totalPages - 1;
-
-    next.addEventListener(
-      "click",
-      () => {
-        window.golferPage++;
-        drawGolfers();
-      }
+    list.appendChild(
+      empty
     );
-
-    nav.appendChild(prev);
-    nav.appendChild(pageLabel);
-    nav.appendChild(next);
-
-    $("golferList")
-      .appendChild(nav);
 
   }
 
 }
-
-
-$("golferSearch")
-.addEventListener(
-  "input",
-  drawGolfers
-);
-
-
 async function init(){
 
   try{
