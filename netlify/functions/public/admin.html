@@ -61,6 +61,18 @@
       font-size:22px;
     }
 
+    h3{
+      margin:22px 0 4px;
+      font-size:18px;
+      color:var(--green);
+    }
+
+    .note{
+      margin:4px 0 8px;
+      color:var(--muted);
+      font-size:14px;
+    }
+
     label{
       display:block;
       font-weight:700;
@@ -75,6 +87,11 @@
       border:1px solid #bfc5c1;
       border-radius:10px;
       background:white;
+    }
+
+    input[readonly]{
+      background:#f1f2ef;
+      color:#535d57;
     }
 
     textarea{
@@ -112,6 +129,13 @@
       gap:14px;
     }
 
+    .three{
+      display:grid;
+      grid-template-columns:
+        repeat(3,minmax(0,1fr));
+      gap:14px;
+    }
+
     .actions{
       display:flex;
       flex-wrap:wrap;
@@ -142,8 +166,15 @@
       display:none;
     }
 
+    .divider{
+      border:0;
+      border-top:1px solid var(--line);
+      margin:24px 0 18px;
+    }
+
     @media(max-width:600px){
-      .row{
+      .row,
+      .three{
         grid-template-columns:1fr;
       }
     }
@@ -200,7 +231,7 @@
 
       <section class="card">
 
-        <h2>Pool Settings</h2>
+        <h2>Annual Pool Setup</h2>
 
         <div class="row">
 
@@ -248,26 +279,179 @@
           </div>
 
           <div>
-            <label for="deadline">
-              Selection Deadline
+            <label for="mastersStartDate">
+              Masters Start Date
             </label>
 
             <input
-              id="deadline"
-              type="datetime-local"
+              id="mastersStartDate"
+              type="date"
             >
           </div>
 
         </div>
 
-        <label for="title">
-          Pool Title
-        </label>
+        <div class="row">
 
-        <input
-          id="title"
-          type="text"
-        >
+          <div>
+            <label for="selectionOpen">
+              Golfer Selections Open
+            </label>
+
+            <input
+              id="selectionOpen"
+              type="datetime-local"
+            >
+          </div>
+
+          <div>
+            <label for="selectionClose">
+              Selections Close
+            </label>
+
+            <input
+              id="selectionClose"
+              type="datetime-local"
+              readonly
+            >
+
+            <div class="note">
+              Automatically set for
+              12:01 AM on Masters Thursday.
+            </div>
+          </div>
+
+        </div>
+
+        <div class="row">
+
+          <div>
+            <label for="rankingCutoff">
+              Ranking Cutoff Date
+            </label>
+
+            <input
+              id="rankingCutoff"
+              type="date"
+              readonly
+            >
+
+            <div class="note">
+              Automatically set one month
+              before the Masters begins.
+            </div>
+          </div>
+
+          <div>
+            <label for="title">
+              Pool Title
+            </label>
+
+            <input
+              id="title"
+              type="text"
+            >
+          </div>
+
+        </div>
+
+        <hr class="divider">
+
+        <h3>Golfer Group Selection Limits</h3>
+
+        <div class="note">
+          Set the maximum number of golfers
+          a player may select from each of
+          the first three groups.
+          Remaining Field has no maximum.
+        </div>
+
+        <div class="three">
+
+          <div>
+            <label for="top20Max">
+              Top 20 Maximum
+            </label>
+
+            <input
+              id="top20Max"
+              type="number"
+              min="0"
+              max="20"
+            >
+          </div>
+
+          <div>
+            <label for="next20Max">
+              Next 20 Maximum
+            </label>
+
+            <input
+              id="next20Max"
+              type="number"
+              min="0"
+              max="20"
+            >
+          </div>
+
+          <div>
+            <label for="third20Max">
+              Next 20 Maximum
+            </label>
+
+            <input
+              id="third20Max"
+              type="number"
+              min="0"
+              max="20"
+            >
+          </div>
+
+        </div>
+
+        <hr class="divider">
+
+        <h3>Prize Distribution</h3>
+
+        <div class="note">
+          The prize pot is divided between
+          the Cut Leader after Round 2 and
+          the Overall Champion after the
+          final round. Percentages must total
+          100%.
+        </div>
+
+        <div class="row">
+
+          <div>
+            <label for="cutLeaderPercent">
+              Cut Leader (%)
+            </label>
+
+            <input
+              id="cutLeaderPercent"
+              type="number"
+              min="0"
+              max="100"
+              step="1"
+            >
+          </div>
+
+          <div>
+            <label for="overallChampionPercent">
+              Overall Champion (%)
+            </label>
+
+            <input
+              id="overallChampionPercent"
+              type="number"
+              min="0"
+              max="100"
+              step="1"
+            >
+          </div>
+
+        </div>
 
         <div class="actions">
 
@@ -276,7 +460,7 @@
             class="primary"
             type="button"
           >
-            Save Pool Settings
+            Save Annual Setup
           </button>
 
         </div>
@@ -322,8 +506,39 @@
 
         </div>
 
+        <div class="actions">
+
+          <button
+            id="runTestScores"
+            type="button"
+          >
+            Run Test Scores
+          </button>
+
+        </div>
+
+        <div
+          id="testScoreStatus"
+          class="status"
+        ></div>
+
         <div
           id="golferStatus"
+          class="status"
+        ></div>
+
+      </section>
+
+      <section class="card">
+
+        <h2>Saved Participants</h2>
+
+        <div id="participantsList">
+          Loading participants...
+        </div>
+
+        <div
+          id="participantsStatus"
           class="status"
         ></div>
 
@@ -361,7 +576,7 @@ function headers(){
   };
 }
 
-function deadlineForInput(value){
+function dateTimeForInput(value){
 
   if (!value) {
     return "";
@@ -396,6 +611,61 @@ function deadlineForInput(value){
   );
 }
 
+function dateOnlyForInput(value){
+
+  if (!value) {
+    return "";
+  }
+
+  if (
+    typeof value === "string" &&
+    /^\d{4}-\d{2}-\d{2}/
+      .test(value)
+  ){
+    return value.slice(0,10);
+  }
+
+  const d =
+    new Date(value);
+
+  if (
+    Number.isNaN(
+      d.getTime()
+    )
+  ){
+    return "";
+  }
+
+  const pad =
+    n =>
+      String(n)
+        .padStart(2,"0");
+
+  return (
+    d.getFullYear() +
+    "-" +
+    pad(d.getMonth()+1) +
+    "-" +
+    pad(d.getDate())
+  );
+}
+
+function updateDerivedDates(
+  config
+){
+
+  $("selectionClose").value =
+    dateTimeForInput(
+      config.selectionClose ||
+      config.deadline
+    );
+
+  $("rankingCutoff").value =
+    dateOnlyForInput(
+      config.rankingCutoff
+    );
+}
+
 async function loadAdmin(){
 
   adminPin =
@@ -425,9 +695,11 @@ async function loadAdmin(){
 
     const [
       configResponse,
-      golferResponse
+      golferResponse,
+      participantResponse
     ] =
       await Promise.all([
+
         fetch(
           "/.netlify/functions/admin-config",
           {
@@ -442,13 +714,23 @@ async function loadAdmin(){
             headers:
               headers()
           }
+        ),
+
+        fetch(
+          "/.netlify/functions/admin-participants",
+          {
+            headers:
+              headers()
+          }
         )
+
       ]);
 
     if (
       configResponse.status === 401 ||
-      golferResponse.status === 401
-    ){
+      golferResponse.status === 401 ||
+      participantResponse.status === 401
+    ) {
       throw new Error(
         "Incorrect admin PIN."
       );
@@ -456,7 +738,8 @@ async function loadAdmin(){
 
     if (
       !configResponse.ok ||
-      !golferResponse.ok
+      !golferResponse.ok ||
+      !participantResponse.ok
     ){
       throw new Error(
         "Unable to open admin settings."
@@ -469,6 +752,9 @@ async function loadAdmin(){
     const golferData =
       await golferResponse.json();
 
+    const participantData =
+      await participantResponse.json();
+
     $("year").value =
       config.year ?? 2027;
 
@@ -478,10 +764,34 @@ async function loadAdmin(){
     $("teamSize").value =
       config.teamSize ?? 14;
 
-    $("deadline").value =
-      deadlineForInput(
-        config.deadline
+    $("mastersStartDate").value =
+      dateOnlyForInput(
+        config.mastersStartDate
       );
+
+    $("selectionOpen").value =
+      dateTimeForInput(
+        config.selectionOpen
+      );
+
+    updateDerivedDates(
+      config
+    );
+
+    $("top20Max").value =
+      config.top20Max ?? 4;
+
+    $("next20Max").value =
+      config.next20Max ?? 4;
+
+    $("third20Max").value =
+      config.third20Max ?? 5;
+
+    $("cutLeaderPercent").value =
+      config.cutLeaderPercent ?? 20;
+
+    $("overallChampionPercent").value =
+      config.overallChampionPercent ?? 80;
 
     $("title").value =
       config.title ||
@@ -500,6 +810,75 @@ async function loadAdmin(){
         .join("\n");
 
     updateGolferCount();
+
+    const participants =
+      Array.isArray(
+        participantData.participants
+      )
+        ? participantData.participants
+        : [];
+
+    const participantsList =
+      $("participantsList");
+
+    participantsList.innerHTML = "";
+
+    if (!participants.length) {
+
+      participantsList.textContent =
+        "No saved participants.";
+
+    }
+    else {
+
+      participants.forEach(
+        participant => {
+
+          const row =
+            document.createElement(
+              "div"
+            );
+
+          row.className =
+            "actions";
+
+          const name =
+            document.createElement(
+              "strong"
+            );
+
+          name.textContent =
+            participant.name;
+
+          const button =
+            document.createElement(
+              "button"
+            );
+
+          button.type =
+            "button";
+
+          button.textContent =
+            "Remove";
+
+          button.dataset.key =
+            participant.key;
+
+          button.className =
+            "removeParticipant";
+
+          row.append(
+            name,
+            button
+          );
+
+          participantsList
+            .appendChild(row);
+
+        }
+      );
+
+    }
 
     $("adminArea")
       .classList
@@ -529,6 +908,19 @@ async function loadAdmin(){
 
 async function saveSettings(){
 
+  const mastersStartDate =
+    $("mastersStartDate")
+      .value;
+
+  const selectionOpen =
+    $("selectionOpen")
+      .value
+        ? new Date(
+            $("selectionOpen")
+              .value
+          ).toISOString()
+        : null;
+
   const payload = {
 
     year:
@@ -546,12 +938,38 @@ async function saveSettings(){
         $("teamSize").value
       ),
 
-    deadline:
-      $("deadline").value
-        ? new Date(
-            $("deadline").value
-          ).toISOString()
-        : null,
+    mastersStartDate:
+      mastersStartDate ||
+      null,
+
+    selectionOpen,
+
+    top20Max:
+      Number(
+        $("top20Max").value
+      ),
+
+    next20Max:
+      Number(
+        $("next20Max").value
+      ),
+
+    third20Max:
+      Number(
+        $("third20Max").value
+      ),
+
+    cutLeaderPercent:
+      Number(
+        $("cutLeaderPercent")
+          .value
+      ),
+
+    overallChampionPercent:
+      Number(
+        $("overallChampionPercent")
+          .value
+      ),
 
     title:
       $("title")
@@ -593,9 +1011,15 @@ async function saveSettings(){
       );
     }
 
+    if (data.config){
+      updateDerivedDates(
+        data.config
+      );
+    }
+
     showStatus(
       $("settingsStatus"),
-      "Pool settings saved."
+      "Annual pool setup saved."
     );
 
   }
@@ -715,6 +1139,135 @@ async function saveGolfers(){
   }
 
 }
+
+async function runTestScores(){
+
+  showStatus(
+    $("testScoreStatus"),
+    "Running test scores..."
+  );
+
+  try{
+
+    const response =
+      await fetch(
+        "/.netlify/functions/test-scores",
+        {
+          method:"POST",
+          headers:
+            headers()
+        }
+      );
+
+    const data =
+      await response.json();
+
+    if(!response.ok){
+      throw new Error(
+        data.error ||
+        "Test scoring failed."
+      );
+    }
+
+    showStatus(
+      $("testScoreStatus"),
+      `Test scores loaded for ${data.count} golfers.`
+    );
+
+  }
+  catch(err){
+
+    showStatus(
+      $("testScoreStatus"),
+      err.message,
+      false
+    );
+
+  }
+
+}
+
+$("runTestScores")
+  .addEventListener(
+    "click",
+    runTestScores
+  );
+
+$("participantsList")
+  .addEventListener(
+    "click",
+    async event => {
+
+      const button =
+        event.target.closest(
+          ".removeParticipant"
+        );
+
+      if (!button) return;
+
+      const key =
+        button.dataset.key;
+
+      const name =
+        button
+          .closest(".actions")
+          ?.querySelector("strong")
+          ?.textContent || key;
+
+      if (
+        !confirm(
+          `Remove ${name}?`
+        )
+      ) {
+        return;
+      }
+
+      try {
+
+        const response =
+          await fetch(
+            "/.netlify/functions/admin-participants",
+            {
+              method:"DELETE",
+              headers:
+                headers(),
+              body:
+                JSON.stringify({
+                  key
+                })
+            }
+          );
+
+        const data =
+          await response.json();
+
+        if (!response.ok) {
+          throw new Error(
+            data.error ||
+            "Unable to remove participant."
+          );
+        }
+
+        showStatus(
+          $("participantsStatus"),
+          `${data.removed} removed.`
+        );
+
+        await loadAdmin();
+
+      }
+      catch(err) {
+
+        showStatus(
+          $("participantsStatus"),
+          err.message,
+          false
+        );
+
+      }
+
+    }
+  );
 
 $("openAdmin")
   .addEventListener(
