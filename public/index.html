@@ -966,28 +966,50 @@ $("teamSizeCount").textContent =
         );
 
 
-    if(config.deadline){
+    if (config.selectionOpen || config.selectionClose) {
+  const now = Date.now();
 
-      locked =
-        Date.now() >=
-        new Date(
-          config.deadline
-        ).getTime();
+  const openTime =
+    config.selectionOpen
+      ? new Date(config.selectionOpen).getTime()
+      : null;
 
+  const closeTime =
+    config.selectionClose
+      ? new Date(config.selectionClose).getTime()
+      : null;
 
-      $("deadlineText").textContent =
-        " • Deadline: " +
-        new Date(
-          config.deadline
-        ).toLocaleString();
+  locked =
+    (openTime !== null && now < openTime) ||
+    (closeTime !== null && now >= closeTime);
 
-    }
-    else{
+  if (closeTime !== null) {
+    $("deadlineText").textContent =
+      " • Selections close: " +
+      new Date(config.selectionClose).toLocaleString();
+  } else if (openTime !== null) {
+    $("deadlineText").textContent =
+      " • Selections open: " +
+      new Date(config.selectionOpen).toLocaleString();
+  }
+}
+else if (config.deadline) {
+  locked =
+    Date.now() >=
+    new Date(
+      config.deadline
+    ).getTime();
 
-      $("deadlineText").textContent =
-        " • Deadline will be set by the pool administrator.";
-
-    }
+  $("deadlineText").textContent =
+    " • Deadline: " +
+    new Date(
+      config.deadline
+    ).toLocaleString();
+}
+else {
+  $("deadlineText").textContent =
+    " • Deadline will be set by the pool administrator.";
+}
 
 
     drawGolfers();
