@@ -336,7 +336,8 @@ Loading…
 <div class="muted">Prize Pot</div>
 
 <div class="big" id="prize">$0</div>
-
+<div class="muted">Cut Leader: <span id="cutPrize">$0</span></div>
+<div class="muted">Overall Champion: <span id="overallPrize">$0</span></div>
 <div class="muted">
 <span id="entries">0</span> entries • 30% Cut Leader • 70% Overall Champion
 </div>
@@ -1210,7 +1211,11 @@ async function loadLeaderboard(){
 
     $("prize").textContent =
       "$" + (d.prize || 0);
+$("cutPrize").textContent =
+  "$" + (d.cutPrize || 0);
 
+$("overallPrize").textContent =
+  "$" + (d.overallPrize || 0);
 
     $("entries").textContent =
       d.entries || 0;
