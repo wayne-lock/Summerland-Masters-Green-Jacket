@@ -99,12 +99,24 @@ const golfers = await readJSON("golfers", []);
                 : `+${r.score - leader}`
             )
     }));
+const prize =
+  Object.keys(teams).length *
+  (config.entryFee || 20);
 
+const cutPrize =
+  Math.round(
+    prize * 0.30
+  );
+
+const overallPrize =
+  Math.round(
+    prize * 0.70
+  );
   return Response.json({
     rows: output,
-    prize:
-      Object.keys(teams).length *
-      (config.entryFee || 20),
+   prize, 
+cutPrize,
+overallPrize,
 
     entries:
       Object.keys(teams).length,
