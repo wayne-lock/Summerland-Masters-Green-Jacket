@@ -246,7 +246,26 @@
               max="50"
             >
           </div>
+<div>
+  <label for="mastersStartDate">
+    Masters Start Date
+  </label>
 
+  <input
+    id="mastersStartDate"
+    type="datetime-local"
+  >
+</div>
+   <div>
+  <label for="selectionOpen">
+    Selections Open
+  </label>
+
+  <input
+    id="selectionOpen"
+    type="datetime-local"
+  >
+</div>       
           <div>
             <label for="deadline">
               Selection Deadline
@@ -511,7 +530,15 @@ const participantData =
 
     $("teamSize").value =
       config.teamSize ?? 14;
+$("mastersStartDate").value =
+  deadlineForInput(
+    config.mastersStartDate
+  );
 
+$("selectionOpen").value =
+  deadlineForInput(
+    config.selectionOpen
+  );
     $("deadline").value =
       deadlineForInput(
         config.deadline
@@ -622,7 +649,19 @@ async function saveSettings(){
       Number(
         $("teamSize").value
       ),
+mastersStartDate:
+  $("mastersStartDate").value
+    ? new Date(
+        $("mastersStartDate").value
+      ).toISOString()
+    : null,
 
+selectionOpen:
+  $("selectionOpen").value
+    ? new Date(
+        $("selectionOpen").value
+      ).toISOString()
+    : null,
     deadline:
       $("deadline").value
         ? new Date(
