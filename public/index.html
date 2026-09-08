@@ -966,7 +966,7 @@ $("teamSizeCount").textContent =
         );
 
 
-    if (config.selectionOpen || config.selectionClose) {
+    if (config.selectionOpen || config.deadline) {
   const now = Date.now();
 
   const openTime =
@@ -975,8 +975,8 @@ $("teamSizeCount").textContent =
       : null;
 
   const closeTime =
-    config.selectionClose
-      ? new Date(config.selectionClose).getTime()
+    config.deadline
+      ? new Date(config.deadline).getTime()
       : null;
 
   locked =
@@ -986,7 +986,7 @@ $("teamSizeCount").textContent =
   if (closeTime !== null) {
     $("deadlineText").textContent =
       " • Selections close: " +
-      new Date(config.selectionClose).toLocaleString();
+      new Date(config.deadline).toLocaleString();
   } else if (openTime !== null) {
     $("deadlineText").textContent =
       " • Selections open: " +
