@@ -915,10 +915,14 @@ if (sb) {
     user?.email?.split("@")[0] ||
     "";
 
-  $("signedInPlayer").textContent =
+  const signedInPlayer = $("signedInPlayer");
+
+if (signedInPlayer) {
+  signedInPlayer.textContent =
     playerName
       ? `Signed in as ${playerName}`
       : "";
+}
 }
     const [cr,gr] =
       await Promise.all([
