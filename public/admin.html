@@ -246,6 +246,33 @@
               max="50"
             >
           </div>
+  <div>
+  <label for="top20Max">
+    Top 20 Maximum Picks
+  </label>
+
+  <input
+    id="top20Max"
+    type="number"
+    min="0"
+    max="20"
+    step="1"
+  >
+</div>
+
+<div>
+  <label for="next20Max">
+    Next 20 Maximum Picks
+  </label>
+
+  <input
+    id="next20Max"
+    type="number"
+    min="0"
+    max="20"
+    step="1"
+  >
+</div>        
 <div>
   <label for="mastersStartDate">
     Masters Start Date
@@ -530,6 +557,11 @@ const participantData =
 
     $("teamSize").value =
       config.teamSize ?? 14;
+    $("top20Max").value =
+  config.top20Max ?? 4;
+
+$("next20Max").value =
+  config.next20Max ?? 4;
 $("mastersStartDate").value =
   deadlineForInput(
     config.mastersStartDate
@@ -649,6 +681,17 @@ async function saveSettings(){
       Number(
         $("teamSize").value
       ),
+   top20Max:
+  Number(
+    $("top20Max").value
+  ),
+
+next20Max:
+  Number(
+    $("next20Max").value
+  ),
+
+third20Max: 20, 
 mastersStartDate:
   $("mastersStartDate").value
     ? new Date(
