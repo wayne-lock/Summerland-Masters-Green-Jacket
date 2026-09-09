@@ -563,9 +563,9 @@ const participantData =
 $("next20Max").value =
   config.next20Max ?? 4;
 $("mastersStartDate").value =
-  deadlineForInput(
-    config.mastersStartDate
-  );
+  config.mastersStartDate
+    ? String(config.mastersStartDate).slice(0, 10)
+    : "";
 
 $("selectionOpen").value =
   deadlineForInput(
