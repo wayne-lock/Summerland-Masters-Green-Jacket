@@ -62,9 +62,7 @@ function groupFromRank(rank) {
     return "next20";
   }
 
-  if (rank <= 60) {
-    return "third20";
-  }
+
 
   return "remaining";
 }
@@ -75,7 +73,7 @@ function validGroup(value) {
     new Set([
       "top20",
       "next20",
-      "third20",
+    
       "remaining"
     ]);
 
