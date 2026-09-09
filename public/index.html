@@ -635,14 +635,7 @@ function drawGolfers(){
           config.next20Max ?? 4
         )
     },
-    {
-      key: "third20",
-      title: "Next 20",
-      max:
-        Number(
-          config.third20Max ?? 5
-        )
-    },
+    
     {
       key: "remaining",
       title: "Remaining Field",
@@ -654,8 +647,8 @@ function drawGolfers(){
 
     if (
       g.group === "top20" ||
-      g.group === "next20" ||
-      g.group === "third20"
+      g.group === "next20" 
+    
     ){
       return g.group;
     }
