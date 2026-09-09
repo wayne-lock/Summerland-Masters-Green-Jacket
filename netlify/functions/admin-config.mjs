@@ -151,14 +151,18 @@ export default async (req) => {
       Number(body.third20Max);
 
     const cutLeaderPercent =
-      Number(
-        body.cutLeaderPercent
-      );
+  Number(
+    body.cutLeaderPercent ??
+    current.cutLeaderPercent ??
+    defaults.cutLeaderPercent
+  );
 
-    const overallChampionPercent =
-      Number(
-        body.overallChampionPercent
-      );
+const overallChampionPercent =
+  Number(
+    body.overallChampionPercent ??
+    current.overallChampionPercent ??
+    defaults.overallChampionPercent
+  );
 
     if (
       !Number.isInteger(year) ||
