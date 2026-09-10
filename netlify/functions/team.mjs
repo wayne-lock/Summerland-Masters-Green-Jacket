@@ -158,7 +158,7 @@ function countGroups(
   const counts = {
     top20: 0,
     next20: 0,
-    third20: 0,
+    
     remaining: 0
   };
 
@@ -172,8 +172,8 @@ function countGroups(
 
     if (
       group === "top20" ||
-      group === "next20" ||
-      group === "third20"
+      group === "next20" 
+      
     ) {
 
       counts[group]++;
@@ -210,7 +210,7 @@ export default async (req) => {
 
         top20Max: 4,
         next20Max: 4,
-        third20Max: 5
+      
       }
     );
 
@@ -514,11 +514,8 @@ export default async (req) => {
         4
       );
 
-    const third20Max =
-      groupMaximum(
-        config.third20Max,
-        5
-      );
+  
+    
 
     if (
       groupCounts.top20 >
@@ -550,20 +547,7 @@ export default async (req) => {
 
     }
 
-    if (
-      groupCounts.third20 >
-      third20Max
-    ) {
-
-      return Response.json(
-        {
-          error:
-            `You may select no more than ${third20Max} golfers from the second Next 20 group.`
-        },
-        { status: 400 }
-      );
-
-    }
+  
 
     /*
       Remaining Field intentionally has
