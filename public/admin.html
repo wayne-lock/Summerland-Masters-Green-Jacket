@@ -830,16 +830,7 @@ async function saveGolfers(){
 const golfers =
   getGolferRecords();
 
-if (!golfers.length){
 
-    showStatus(
-      $("golferStatus"),
-      "Enter at least one golfer.",
-      false
-    );
-
-    return;
-  }
 
   showStatus(
     $("golferStatus"),
