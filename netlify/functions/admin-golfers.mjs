@@ -338,19 +338,7 @@ export default async (req) => {
       );
     }
 
-    if (
-      !uniqueGolfers.length
-    ) {
-
-      return Response.json(
-        {
-          error:
-            "Enter at least one golfer."
-        },
-        { status: 400 }
-      );
-
-    }
+  
 
     let nextNumber = 1;
 
