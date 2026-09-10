@@ -339,14 +339,14 @@
         <h2>Masters Golfer Field</h2>
 
         <p>
-          Enter one golfer per line.
-          The field size is determined automatically
-          from the names entered here.
+        Enter one golfer per line as: Name, Rank
+Example: Scottie Scheffler, 1
+The field size is determined automatically.
         </p>
 
         <textarea
           id="golferNames"
-          placeholder="Scottie Scheffler&#10;Rory McIlroy&#10;..."
+        placeholder="Scottie Scheffler, 1&#10;Rory McIlroy, 2&#10;..."
         ></textarea>
 
         <div
@@ -783,7 +783,28 @@ function getGolferNames(){
   );
 
 }
+function getGolferRecords(){
+  return $("golferNames")
+    .value
+    .split("\n")
+    .map(line => {
+      const parts = line.split(",");
+      const name = (parts[0] || "").trim();
+      const rank = Number(
+        (parts[1] || "").trim()
+      );
 
+      return {
+        name,
+        rank:
+          Number.isInteger(rank) &&
+          rank > 0
+            ? rank
+            : null
+      };
+    })
+    .filter(g => g.name);
+}
 function updateGolferCount(){
 
   const names =
@@ -802,10 +823,10 @@ function updateGolferCount(){
 
 async function saveGolfers(){
 
-  const names =
-    getGolferNames();
+const golfers =
+  getGolferRecords();
 
-  if (!names.length){
+if (!golfers.length){
 
     showStatus(
       $("golferStatus"),
@@ -832,7 +853,7 @@ async function saveGolfers(){
             headers(),
           body:
             JSON.stringify({
-              names
+            golfers
             })
         }
       );
@@ -849,10 +870,14 @@ async function saveGolfers(){
       );
     }
 
-    $("golferNames").value =
-      data.golfers
-        .map(g => g.name)
-        .join("\n");
+  $("golferNames").value =
+  data.golfers
+    .map(g =>
+      g.rank
+        ? `${g.name}, ${g.rank}`
+        : g.name
+    )
+    .join("\n");
 
     updateGolferCount();
 
