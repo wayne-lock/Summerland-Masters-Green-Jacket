@@ -587,10 +587,14 @@ $("selectionOpen").value =
         ? golferData.golfers
         : [];
 
-    $("golferNames").value =
-      golfers
-        .map(g => g.name)
-        .join("\n");
+  $("golferNames").value =
+  golfers
+    .map(g =>
+      g.rank
+        ? `${g.name}, ${g.rank}`
+        : g.name
+    )
+    .join("\n");
 
     updateGolferCount();
 const participants =
