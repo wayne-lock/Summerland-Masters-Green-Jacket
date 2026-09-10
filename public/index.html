@@ -444,7 +444,9 @@ Submit Team
 <li>
 <span id="rulePickCount">Choose any 14 golfers in that year's Masters field.</span>
 </li>
-
+<li>
+<span id="ruleGroupLimits">Maximum 4 golfers from Top 20 and 4 golfers from Next 20.</span>
+</li>
 <li>
 One team per person.
 </li>
@@ -938,7 +940,13 @@ if (signedInPlayer) {
 $("rulePickCount").textContent =
   `Choose any ${config.teamSize} golfers in that year's Masters field.`;
 
-$("ruleCountTotal").textContent =
+$("ruleGroupLimits").textContent =
+  `Maximum ${config.top20Max ?? 4} golfers from Top 20 and ${config.next20Max ?? 4} golfers from Next 20.`;
+
+
+
+    
+    $("ruleCountTotal").textContent =
   `All ${config.teamSize} golfers count toward the team total.`;
 $("pickHeading").textContent =
   `Choose Your ${config.teamSize} Golfers`;
