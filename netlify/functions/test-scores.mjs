@@ -42,7 +42,7 @@ export default async (req) => {
       total:
         [-5, -3, 1, 4, 7][i % 5],
       position: null,
-      thru: "F"
+    thru: i === 1 ? "CUT" : "F"
     }));
 
   const winnerId =
