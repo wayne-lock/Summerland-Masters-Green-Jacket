@@ -313,9 +313,9 @@ const overallChampionPercent =
       body.selectionOpen;
 
     const selectionClose =
-      calculateSelectionClose(
-        mastersStartDate
-      );
+  validDate(body.deadline)
+    ? new Date(body.deadline).toISOString()
+    : calculateSelectionClose(mastersStartDate);
 
     const rankingCutoff =
       calculateRankingCutoff(
