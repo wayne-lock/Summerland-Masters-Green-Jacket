@@ -922,6 +922,14 @@ if (signedInPlayer) {
       ? `Signed in as ${playerName}`
       : "";
 }
+  if (user) {
+  $("authSection").classList.add("hidden");
+  $("signOutBtn").classList.remove("hidden");
+} else {
+  $("authSection").classList.remove("hidden");
+  $("joinCard").classList.add("hidden");
+  $("signOutBtn").classList.add("hidden");
+}
 }
     const [cr,gr] =
       await Promise.all([
