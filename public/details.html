@@ -6,16 +6,6 @@
   <title>2027 Summerland Masters Green Jacket - Details</title>
 
   <style>
-    :root {
-      --green: #234f3b;
-      --cream: #f5f0e2;
-      --ink: #1e2923;
-      --muted: #67716b;
-      --line: #d7d9d4;
-      --white: #ffffff;
-      --gold: #b79a58;
-    }
-
     * {
       box-sizing: border-box;
     }
@@ -23,107 +13,114 @@
     body {
       margin: 0;
       font-family: Arial, Helvetica, sans-serif;
-      color: var(--ink);
-      background: #eef1ed;
+      color: white;
+      background:
+        linear-gradient(rgba(9, 25, 18, 0.45), rgba(9, 25, 18, 0.58)),
+        url("IMG_1526.png") center center / cover fixed no-repeat;
+      min-height: 100vh;
     }
 
     .page {
       max-width: 760px;
       margin: 0 auto;
-      padding: 24px 18px 40px;
+      padding: 34px 18px 44px;
     }
 
     .header {
       text-align: center;
-      margin-bottom: 22px;
+      margin-bottom: 24px;
+      text-shadow: 0 3px 12px rgba(0,0,0,0.55);
     }
 
     .header h1 {
-      margin: 0 0 8px;
-      color: var(--green);
-      font-size: 34px;
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 38px;
+      line-height: 1.05;
     }
 
-    .header p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 18px;
+    .header .green {
+      color: #23c77a;
+      letter-spacing: 5px;
+      margin-top: 8px;
+      font-size: 28px;
+      font-weight: 700;
     }
 
     .card {
-      background: var(--white);
-      border-radius: 16px;
-      padding: 24px;
+      background: rgba(10, 29, 21, 0.90);
+      border: 1px solid rgba(255,255,255,0.20);
+      border-radius: 18px;
+      padding: 22px;
       margin-bottom: 18px;
-      border: 1px solid var(--line);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.30);
+      backdrop-filter: blur(6px);
     }
 
     .details {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 14px;
+      gap: 12px;
     }
 
     .detail {
-      background: #faf9f5;
-      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.13);
       border-radius: 12px;
-      padding: 16px;
+      padding: 15px;
     }
 
     .label {
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 700;
-      letter-spacing: 1px;
+      letter-spacing: 1.5px;
       text-transform: uppercase;
-      color: var(--muted);
+      color: #e7d59c;
       margin-bottom: 6px;
     }
 
     .value {
       font-size: 20px;
       font-weight: 700;
-      color: var(--green);
+      color: white;
     }
 
     h2 {
-      color: var(--green);
       margin-top: 0;
+      color: #23c77a;
+      font-family: Georgia, "Times New Roman", serif;
     }
 
     ul {
       padding-left: 22px;
       line-height: 1.6;
       font-size: 17px;
+      margin-bottom: 0;
     }
 
-    .prize {
-      background: var(--cream);
-      border-left: 5px solid var(--gold);
-    }
-
-    .cta {
+    .actions {
       text-align: center;
     }
 
-    .join-button {
+    .join-button,
+    .back-button {
       display: inline-block;
-      background: var(--green);
-      color: white;
       text-decoration: none;
-      font-size: 20px;
       font-weight: 700;
-      padding: 16px 30px;
-      border-radius: 12px;
-      margin-top: 8px;
+      border-radius: 9px;
+      padding: 11px 18px;
+      margin: 5px;
     }
 
-    .back {
-      display: inline-block;
-      margin-top: 14px;
-      color: var(--green);
-      text-decoration: none;
-      font-weight: 700;
+    .join-button {
+      background: #19b86a;
+      color: white;
+    }
+
+    .back-button {
+      background: rgba(255,255,255,0.12);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.20);
     }
 
     @media (max-width: 600px) {
@@ -132,22 +129,28 @@
       }
 
       .header h1 {
-        font-size: 30px;
+        font-size: 31px;
+      }
+
+      .header .green {
+        font-size: 23px;
       }
     }
   </style>
 </head>
 
 <body>
-  <div class="page">
 
-    <div class="header">
-      <h1>2027 Summerland Masters Green Jacket</h1>
-      <p>Pool Details</p>
-    </div>
+  <main class="page">
+
+    <header class="header">
+      <h1>SUMMERLAND MASTERS</h1>
+      <div class="green">GREEN JACKET</div>
+    </header>
 
     <section class="card">
       <div class="details">
+
         <div class="detail">
           <div class="label">Entry Fee</div>
           <div class="value">$20</div>
@@ -167,11 +170,13 @@
           <div class="label">Selections Close</div>
           <div class="value">12:01 AM Opening Day</div>
         </div>
+
       </div>
     </section>
 
-    <section class="card prize">
+    <section class="card">
       <h2>How It Works</h2>
+
       <ul>
         <li>Choose the required number of golfers for your team.</li>
         <li>Lowest cumulative team score wins.</li>
@@ -181,15 +186,12 @@
       </ul>
     </section>
 
-    <section class="card cta">
-      <h2>Ready to Play?</h2>
-      <p>Join the pool, create your account, and make your selections before the deadline.</p>
-
+    <section class="card actions">
       <a class="join-button" href="index.html">Join the Pool</a>
-      <br>
-      <a class="back" href="invite.html">Back to Welcome</a>
+      <a class="back-button" href="invite.html">Back</a>
     </section>
 
-  </div>
+  </main>
+
 </body>
 </html>
