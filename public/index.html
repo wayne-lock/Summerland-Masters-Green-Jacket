@@ -80,7 +80,18 @@ nav button.active{
   background:var(--green);
   color:white
 }
+#authSection #signInBtn,
+#authSection #showJoinBtn {
+  background: var(--green);
+  color: white;
+  border: 1px solid var(--green);
+}
 
+#authSection #forgotPassword {
+  background: rgba(255,255,255,0.10);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.55);
+}
 button:disabled{opacity:.45}
 
 .card{
@@ -271,12 +282,12 @@ Pick 14 golfers. Lowest team score wins the jacket.
           required
         >
 
-        <button type="submit">Sign In</button>
+        <button type="submit" id="signInBtn">Sign In</button>
         <button type="button" id="forgotPassword">
           Forgot Password
         </button>
       </form>
-      <button type="button" onclick="document.getElementById('joinCard').classList.remove('hidden')">
+      <button type="button" id="showJoinBtn" onclick="document.getElementById('joinCard').classList.remove('hidden')">
   Join the Pool
 </button>
     </div>
