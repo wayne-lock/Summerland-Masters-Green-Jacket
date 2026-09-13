@@ -229,7 +229,7 @@ th{
 Pick 14 golfers. Lowest team score wins the jacket.
 </div>
 
-<nav>
+<nav id="poolNav" class="hidden">
 <button class="active" data-tab="leaderboard">Leaderboard</button>
 <button data-tab="pick">Pick My Team</button>
 <button data-tab="rules">Rules</button>
@@ -941,13 +941,17 @@ if (signedInPlayer) {
 }
   if (user) {
   $("authSection").classList.add("hidden");
+  $("poolNav").classList.remove("hidden");
+  $("leaderboard").classList.remove("hidden");
   $("signOutBtn").classList.remove("hidden");
 } else {
   $("authSection").classList.remove("hidden");
   $("joinCard").classList.add("hidden");
+  $("poolNav").classList.add("hidden");
+  $("leaderboard").classList.add("hidden");
   $("signOutBtn").classList.add("hidden");
 }
-}
+
     const [cr,gr] =
       await Promise.all([
 
