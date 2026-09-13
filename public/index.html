@@ -1427,6 +1427,9 @@ $("loginForm").onsubmit = async event => {
       ? `Signed in as ${playerName}`
       : "";
     $("authSection").classList.add("hidden");
+$("poolNav").classList.remove("hidden");
+$("leaderboard").classList.remove("hidden");
+$("signOutBtn").classList.remove("hidden");
 }
 };
 
