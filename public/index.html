@@ -92,12 +92,19 @@ button:disabled{opacity:.45}
 }
 #authSection .card {
   background: transparent;
-  color: #1e2923;
+  color: white;
   border: none;
   border-radius: 0;
   padding: 10px 0;
   box-shadow: none;
   backdrop-filter: none;
+}
+  #authSection {
+  background:
+    linear-gradient(rgba(9, 25, 18, 0.20), rgba(9, 25, 18, 0.32)),
+    url("IMG_1526.png") center center / cover no-repeat;
+  min-height: calc(100vh - 150px);
+  padding: 28px 18px;
 }
 .grid{
   display:grid;
@@ -127,13 +134,13 @@ input{
 }
 #authSection input {
   background: rgba(255,255,255,0.14);
-  color: #1e2923;
+  color: white;
   border: 1px solid rgba(255,255,255,0.24);
   border-radius: 10px;
 }
 
 #authSection input::placeholder {
-  color: rgba(30,41,35,0.60);
+  color: rgba(255,255,255,0.68);
 }
 .fieldgrid{
   display:grid;
