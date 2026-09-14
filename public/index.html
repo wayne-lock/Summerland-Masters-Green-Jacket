@@ -1412,11 +1412,24 @@ $("loginForm").onsubmit = async event => {
 
   authMessage("Signing in...");
 
-  const { error } =
-    await sb.auth.signInWithPassword({
+  let result;
+
+try {
+  result = await Promise.race([
+    sb.auth.signInWithPassword({
       email: $("loginEmail").value.trim().toLowerCase(),
       password: $("loginPassword").value
-    });
+    }),
+    new Promise((_, reject) =>
+      setTimeout(() => reject(new Error("Sign-in timed out after 10 seconds.")), 10000)
+    )
+  ]);
+} catch (e) {
+  authMessage(e.message || "Sign-in failed.", true);
+  return;
+}
+
+const { error } = result;
 
   if (error) {
     authMessage(error.message, true);
