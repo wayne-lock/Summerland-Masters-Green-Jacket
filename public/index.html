@@ -1180,7 +1180,58 @@ $("submitTeam")
 
 
 
+async function loadSavedTeam() {
+  showStatus("Opening saved team...");
 
+  try {
+    const r = await fetch(
+      "/.netlify/functions/team",
+      {
+        headers: {
+          "authorization":
+            `Bearer ${(await sb.auth.getSession()).data.session?.access_token || ""}`
+        }
+      }
+    );
+
+    const d = await r.json();
+
+    if (!r.ok)
+      throw new Error(
+        d.error ||
+        "Could not open team."
+      );
+
+    if (!d.found) {
+      showStatus(
+        "No saved team found for that name."
+      );
+      return;
+    }
+
+    selected =
+      (d.golferIds || [])
+        .map(String);
+
+    locked =
+      !!d.locked;
+
+    renderSelected();
+    drawGolfers();
+
+    showStatus(
+      locked
+        ? "Team opened. The deadline has passed, so it is locked."
+        : "Saved team opened. You may edit it before the deadline."
+    );
+  }
+  catch (e) {
+    showStatus(
+      e.message,
+      false
+    );
+  }
+}
 async function loadLeaderboard(){
 
   try{
@@ -1361,6 +1412,7 @@ if (signedInPlayer) {
 $("poolNav").classList.remove("hidden");
 $("leaderboard").classList.remove("hidden");
 $("signOutBtn").classList.remove("hidden");
+    await loadSavedTeam();
 }
 };
 
