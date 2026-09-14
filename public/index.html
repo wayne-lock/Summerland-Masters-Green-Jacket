@@ -1443,7 +1443,11 @@ $("signOutBtn").onclick = async () => {
 
   const signedInPlayer = $("signedInPlayer");
   if (signedInPlayer) signedInPlayer.textContent = "";
-  authMessage("");
+  const authBox = $("authMessage");
+if (authBox) {
+  authBox.textContent = "";
+  authBox.classList.add("hidden");
+}
 };
 if (sb) {
   sb.auth.onAuthStateChange(
