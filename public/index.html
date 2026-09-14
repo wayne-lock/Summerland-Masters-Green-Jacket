@@ -1306,11 +1306,13 @@ function authMessage(text, isError = false) {
 if (!text) {
   box.textContent = "";
   box.classList.add("hidden");
+  box.style.display = "none";
   box.style.fontWeight = "";
   return;
 }
 
 box.textContent = text;
+  box.style.display = "";
 box.classList.remove("hidden");
 box.style.fontWeight = isError ? "700" : "";
 }
