@@ -1303,9 +1303,16 @@ function authMessage(text, isError = false) {
   const box = $("authMessage");
   if (!box) return;
 
-  box.textContent = text;
-  box.classList.remove("hidden");
-  box.style.fontWeight = isError ? "700" : "";
+if (!text) {
+  box.textContent = "";
+  box.classList.add("hidden");
+  box.style.fontWeight = "";
+  return;
+}
+
+box.textContent = text;
+box.classList.remove("hidden");
+box.style.fontWeight = isError ? "700" : "";
 }
 
 $("loginForm").onsubmit = async event => {
