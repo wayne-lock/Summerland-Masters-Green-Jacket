@@ -1411,9 +1411,7 @@ $("loginForm").onsubmit = async event => {
   if (!sb) return;
 
   authMessage("Signing in...");
-setTimeout(() => {
-  authMessage("10-second timer fired.", true);
-}, 10000);
+
   let result;
 
 try {
