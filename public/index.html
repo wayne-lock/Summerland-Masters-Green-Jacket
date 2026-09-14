@@ -1445,10 +1445,14 @@ const { error } = result;
     user?.email?.split("@")[0] ||
     "";
 
-  $("signedInPlayer").textContent =
+  const signedInPlayer = $("signedInPlayer");
+
+if (signedInPlayer) {
+  signedInPlayer.textContent =
     playerName
       ? `Signed in as ${playerName}`
       : "";
+}
     $("authSection").classList.add("hidden");
 $("poolNav").classList.remove("hidden");
 $("leaderboard").classList.remove("hidden");
