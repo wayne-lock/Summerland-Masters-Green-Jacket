@@ -18,6 +18,9 @@
   window.addEventListener("error", function(e) {
     alert("JavaScript error: " + e.message + " at line " + e.lineno);
   });
+  window.addEventListener("unhandledrejection", function(e) {
+  alert("Promise error: " + (e.reason?.message || String(e.reason)));
+});
 </script>
 <style>
 :root{
