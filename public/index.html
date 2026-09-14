@@ -1435,8 +1435,7 @@ const { error } = result;
     authMessage(error.message, true);
   }
   else {
-  const { data } = await sb.auth.getUser();
-  const user = data?.user;
+  const user = result.data?.user;
 
   const playerName =
     user?.user_metadata?.player_name ||
