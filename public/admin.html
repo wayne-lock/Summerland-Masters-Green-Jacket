@@ -1065,7 +1065,59 @@ $("participantsList")
       }
     }
   );
-  
+  $("createInvitation").addEventListener("click", () => {
+  const firstName = $("inviteFirstName").value.trim();
+  const lastName = $("inviteLastName").value.trim();
+  const email = $("inviteEmail").value.trim().toLowerCase();
+
+  if (!firstName || !lastName || !email) {
+    showStatus(
+      $("invitationStatus"),
+      "Please enter first name, last name, and email.",
+      false
+    );
+    return;
+  }
+
+  const inviteUrl = new URL(window.location.origin + "/");
+  inviteUrl.searchParams.set("join", "1");
+  inviteUrl.searchParams.set("first", firstName);
+  inviteUrl.searchParams.set("last", lastName);
+  inviteUrl.searchParams.set("email", email);
+
+  const subject =
+    "You're invited — 2027 Summerland Masters Golf Pool";
+
+  const body =
+`Hi ${firstName},
+
+You're invited to join the 2027 Summerland Masters Green Jacket Golf Pool.
+
+Use this personalized link to create your account and join the pool:
+
+${inviteUrl.toString()}
+
+Once you're in, you can select your team before the deadline.
+
+Hope you can join us.
+Wayne`;
+
+  $("invitationList").innerHTML = `
+    <div class="card" style="margin-top:12px;">
+      <strong>${firstName} ${lastName}</strong><br>
+      ${email}<br><br>
+      <a href="mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}">
+        Send Invitation
+      </a>
+    </div>
+  `;
+
+  showStatus(
+    $("invitationStatus"),
+    "Invitation created.",
+    true
+  );
+});
 $("openAdmin")
   .addEventListener(
     "click",
