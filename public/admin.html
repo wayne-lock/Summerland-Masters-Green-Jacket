@@ -384,6 +384,69 @@ The field size is determined automatically.
           id="golferStatus"
           class="status"
         ></div>
+       <div class="card" style="margin-top:24px;">
+  <h2>Invitations</h2>
+
+  <p class="muted">
+    Create an invitation for a player to join the
+    Summerland Masters Green Jacket Pool.
+  </p>
+
+  <div class="grid">
+
+    <div>
+      <label for="inviteFirstName">
+        First Name
+      </label>
+      <input
+        id="inviteFirstName"
+        type="text"
+        autocomplete="given-name"
+      >
+    </div>
+
+    <div>
+      <label for="inviteLastName">
+        Last Name
+      </label>
+      <input
+        id="inviteLastName"
+        type="text"
+        autocomplete="family-name"
+      >
+    </div>
+
+    <div>
+      <label for="inviteEmail">
+        Email
+      </label>
+      <input
+        id="inviteEmail"
+        type="email"
+        autocomplete="email"
+      >
+    </div>
+
+  </div>
+
+  <button
+    id="createInvitation"
+    type="button"
+  >
+    Create Invitation
+  </button>
+
+  <div
+    id="invitationStatus"
+    class="status">
+  </div>
+
+  <div
+    id="invitationList"
+    style="margin-top:16px;">
+  </div>
+
+</div> 
 <div class="card" style="margin-top:24px;">
   <h2>Saved Participants</h2>
 
