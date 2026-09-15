@@ -6,7 +6,7 @@ export function store(name="masters-pool"){
 
 export async function readJSON(key, fallback){
   const s = store();
-  const val = await s.get(key,{type:"json"});
+  const val = await s.get(key,{type:"json", consistency:"strong"});
   return val ?? fallback;
 }
 
