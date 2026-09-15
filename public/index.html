@@ -1503,7 +1503,8 @@ $("signOutBtn").onclick = async () => {
   $("authSection").classList.remove("hidden");
   $("joinCard").classList.add("hidden");
   $("signOutBtn").classList.add("hidden");
-
+$("poolNav").classList.add("hidden");
+$("leaderboard").classList.add("hidden");
   const signedInPlayer = $("signedInPlayer");
   if (signedInPlayer) signedInPlayer.textContent = "";
   authMessage("");
