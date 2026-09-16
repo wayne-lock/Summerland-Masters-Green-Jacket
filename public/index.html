@@ -1464,9 +1464,25 @@ $("signupForm").onsubmit = async event => {
     return;
   }
 
-  authMessage(
-  "Success! Your account is ready. You can now sign in and select your team."
-);
+  const signedInPlayer =
+  $("signedInPlayer");
+
+if (signedInPlayer) {
+  const playerName =
+    `${firstName} ${lastName}`.trim();
+
+  signedInPlayer.textContent =
+    playerName
+      ? `Signed in as ${playerName}`
+      : "";
+}
+
+$("authSection").classList.add("hidden");
+$("poolNav").classList.remove("hidden");
+$("leaderboard").classList.remove("hidden");
+$("signOutBtn").classList.remove("hidden");
+
+await loadSavedTeam();
 };
 
 $("forgotPassword").onclick = async () => {
