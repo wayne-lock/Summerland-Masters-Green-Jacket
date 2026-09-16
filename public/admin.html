@@ -558,7 +558,8 @@ async function loadAdmin(){
     const [
       configResponse,
       golferResponse,
-      participantResponse
+    participantResponse,
+invitationResponse
     ] =
       await Promise.all([
         fetch(
@@ -583,13 +584,22 @@ fetch(
     headers:
       headers()
   }
+),
+
+fetch(
+  "/.netlify/functions/admin-invitations",
+  {
+    headers:
+      headers()
+  }
 )
-      ]);
+]);
 
     if (
   configResponse.status === 401 ||
-  golferResponse.status === 401 ||
-  participantResponse.status === 401
+golferResponse.status === 401 ||
+participantResponse.status === 401 ||
+invitationResponse.status === 401
 ) {
       throw new Error(
         "Incorrect admin PIN."
@@ -597,8 +607,10 @@ fetch(
     }
 
     if (
-      !configResponse.ok ||
-      !golferResponse.ok
+    !configResponse.ok ||
+!golferResponse.ok ||
+!participantResponse.ok ||
+!invitationResponse.ok
     ){
       throw new Error(
         "Unable to open admin settings."
@@ -612,6 +624,8 @@ fetch(
       await golferResponse.json();
 const participantData =
   await participantResponse.json();
+      const invitationData =
+  await invitationResponse.json();
     $("year").value =
       config.year ?? 2027;
 
@@ -704,6 +718,97 @@ if (!participants.length) {
     participantsList.appendChild(row);
   });
 }
+  const invitations =
+  Array.isArray(invitationData.invitations)
+    ? invitationData.invitations
+    : [];
+
+const invitationList =
+  $("invitationList");
+
+invitationList.innerHTML = "";
+
+invitations.forEach(invitation => {
+  const inviteUrl =
+    new URL(window.location.origin + "/");
+
+  inviteUrl.searchParams.set("join", "1");
+  inviteUrl.searchParams.set(
+    "first",
+    invitation.firstName
+  );
+  inviteUrl.searchParams.set(
+    "last",
+    invitation.lastName
+  );
+  inviteUrl.searchParams.set(
+    "email",
+    invitation.email
+  );
+
+  const subject =
+    "You're invited — 2027 Summerland Masters Golf Pool";
+
+  const body =
+`Hi ${invitation.firstName},
+
+You're invited to join the 2027 Summerland Masters Green Jacket Golf Pool.
+
+Use this personalized link to create your account and join the pool:
+
+${inviteUrl.toString()}
+
+Once you're in, you can select your team before the deadline.
+
+Hope you can join us.
+Wayne`;
+
+  const card =
+    document.createElement("div");
+
+  card.className = "card";
+  card.style.marginTop = "12px";
+
+  const name =
+    document.createElement("strong");
+
+  name.textContent =
+    `${invitation.firstName} ${invitation.lastName}`;
+
+  const email =
+    document.createElement("div");
+
+  email.textContent =
+    invitation.email;
+
+  const status =
+    document.createElement("div");
+
+  status.textContent =
+    `Status: ${invitation.status || "Invited"}`;
+
+  const send =
+    document.createElement("a");
+
+  send.textContent =
+    "Send Invitation";
+
+  send.href =
+    `mailto:${encodeURIComponent(invitation.email)}` +
+    `?subject=${encodeURIComponent(subject)}` +
+    `&body=${encodeURIComponent(body)}`;
+
+  card.append(
+    name,
+    document.createElement("br"),
+    email,
+    status,
+    document.createElement("br"),
+    send
+  );
+
+  invitationList.appendChild(card);
+});
     $("adminArea")
       .classList
       .remove("hidden");
