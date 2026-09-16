@@ -784,8 +784,22 @@ Wayne`;
   const status =
     document.createElement("div");
 
-  status.textContent =
-    `Status: ${invitation.status || "Invited"}`;
+  const invitationName =
+  `${invitation.firstName} ${invitation.lastName}`
+    .trim()
+    .toLowerCase();
+
+const teamSubmitted =
+  participants.some(participant =>
+    String(participant.name || "")
+      .trim()
+      .toLowerCase() === invitationName
+  );
+
+status.textContent =
+  teamSubmitted
+    ? "Status: Team Submitted"
+    : "Status: Invited";
 
   const send =
     document.createElement("a");
