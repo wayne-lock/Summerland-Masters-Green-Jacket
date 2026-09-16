@@ -235,14 +235,24 @@ export default async (req) => {
 
     }
 
-    const teams =
-      await readJSON(
-        "teams",
-        {}
-      );
+    const teamKey =
+  `team-${user.id}`;
 
-    const team =
-      teams[user.id];
+const savedTeam =
+  await readJSON(
+    teamKey,
+    null
+  );
+
+const teams =
+  await readJSON(
+    "teams",
+    {}
+  );
+
+const team =
+  savedTeam ||
+  teams[user.id];
 
     if (!team) {
 
@@ -555,44 +565,61 @@ export default async (req) => {
     */
 
     const teams =
-      await readJSON(
-        "teams",
-        {}
-      );
+  await readJSON(
+    "teams",
+    {}
+  );
 
-    const now =
-      new Date()
-        .toISOString();
+const teamKey =
+  `team-${user.id}`;
 
-    const existing =
-      teams[user.id];
+const savedTeam =
+  await readJSON(
+    teamKey,
+    null
+  );
 
-    teams[user.id] = {
+const existing =
+  savedTeam ||
+  teams[user.id];
 
-      userId:
-        user.id,
+const now =
+  new Date()
+    .toISOString();
 
-      email:
-        user.email ||
-        null,
+const teamRecord = {
+  userId:
+    user.id,
 
-      name,
+  email:
+    user.email ||
+    null,
 
-      golferIds,
+  name,
 
-      submittedAt:
-        existing
-          ?.submittedAt ||
-        now,
+  golferIds,
 
-      updatedAt:
-        now
-    };
+  submittedAt:
+    existing
+      ?.submittedAt ||
+    now,
 
-    await writeJSON(
-      "teams",
-      teams
-    );
+  updatedAt:
+    now
+};
+
+await writeJSON(
+  teamKey,
+  teamRecord
+);
+
+teams[user.id] =
+  teamRecord;
+
+await writeJSON(
+  "teams",
+  teams
+);
 
     return Response.json({
 
