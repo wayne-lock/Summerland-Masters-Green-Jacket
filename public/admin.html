@@ -1065,7 +1065,7 @@ $("participantsList")
       }
     }
   );
-  $("createInvitation").onclick = () => {
+$("createInvitation").onclick = async () => {
   const firstName = $("inviteFirstName").value.trim();
   const lastName = $("inviteLastName").value.trim();
   const email = $("inviteEmail").value.trim().toLowerCase();
@@ -1078,7 +1078,36 @@ $("participantsList")
     );
     return;
   }
+try {
+  const response = await fetch(
+    "/.netlify/functions/admin-invitations",
+    {
+      method: "POST",
+      headers: headers(),
+      body: JSON.stringify({
+        firstName,
+        lastName,
+        email
+      })
+    }
+  );
 
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(
+      data.error ||
+      "Unable to save invitation."
+    );
+  }
+} catch (error) {
+  showStatus(
+    $("invitationStatus"),
+    error.message,
+    false
+  );
+  return;
+}
   const inviteUrl = new URL(window.location.origin + "/");
   inviteUrl.searchParams.set("join", "1");
   inviteUrl.searchParams.set("first", firstName);
