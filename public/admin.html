@@ -797,15 +797,62 @@ Wayne`;
     `mailto:${encodeURIComponent(invitation.email)}` +
     `?subject=${encodeURIComponent(subject)}` +
     `&body=${encodeURIComponent(body)}`;
+const remove =
+  document.createElement("button");
 
+remove.type = "button";
+remove.textContent = "Remove Invitation";
+
+remove.onclick = async () => {
+  if (
+    !window.confirm(
+      `Remove invitation for ${invitation.firstName} ${invitation.lastName}?`
+    )
+  ) {
+    return;
+  }
+
+  try {
+    const response = await fetch(
+      "/.netlify/functions/admin-invitations",
+      {
+        method: "DELETE",
+        headers: headers(),
+        body: JSON.stringify({
+          email: invitation.email
+        })
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        data.error ||
+        "Unable to remove invitation."
+      );
+    }
+
+    await loadAdmin();
+  } catch (error) {
+    showStatus(
+      $("invitationStatus"),
+      error.message,
+      false
+    );
+  }
+};
   card.append(
-    name,
-    document.createElement("br"),
-    email,
-    status,
-    document.createElement("br"),
-    send
-  );
+  name,
+  document.createElement("br"),
+  email,
+  status,
+  document.createElement("br"),
+  send,
+  document.createElement("br"),
+  document.createElement("br"),
+  remove
+);
 
   invitationList.appendChild(card);
 });
