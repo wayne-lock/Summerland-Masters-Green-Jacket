@@ -56,7 +56,19 @@ main{
   margin:0;
   padding:0;
 }
+.golfer-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px;
+  margin:10px 0 20px;
+}
 
+.golfer-grid .golfer{
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  gap:8px;
+}
 h1{
   margin:0;
   color:var(--green);
@@ -798,7 +810,15 @@ function drawGolfers(){
     list.appendChild(
       heading
     );
+const grid =
+  document.createElement("div");
 
+grid.className =
+  "golfer-grid";
+
+list.appendChild(
+  grid
+);
     groupGolfers.forEach(g => {
 
       const on =
@@ -916,7 +936,7 @@ function drawGolfers(){
         btn
       );
 
-      list.appendChild(
+      grid.appendChild(
         row
       );
 
