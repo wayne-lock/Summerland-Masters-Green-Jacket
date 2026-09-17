@@ -836,17 +836,7 @@ list.appendChild(
       row.className =
         "golfer";
 
-      const label =
-        document.createElement(
-          "strong"
-        );
-
-      label.textContent =
-        g.name;
-
-      row.appendChild(
-        label
-      );
+  
 
       const btn =
         document.createElement(
@@ -856,10 +846,8 @@ list.appendChild(
       btn.type =
         "button";
 
-      btn.textContent =
-        on
-          ? "Selected"
-          : "Add";
+    btn.textContent =
+  g.name;
 
       const groupFull =
         group.max !== null &&
