@@ -286,8 +286,7 @@ Pick 14 golfers. Lowest team score wins the jacket.
 <section id="authSection">
   <div class="grid">
 
-    <div class="card">
-      <h2>Player Sign In</h2>
+  <div class="card" id="loginCard">
 
       <form id="loginForm">
         <label for="loginEmail">Email</label>
@@ -311,7 +310,7 @@ Pick 14 golfers. Lowest team score wins the jacket.
           Forgot Password
         </button>
       </form>
-   <button type="button" id="showJoinBtn" onclick="document.getElementById('authSection').classList.add('hidden');document.getElementById('joinCard').classList.remove('hidden')">
+  <button type="button" id="showJoinBtn" onclick="document.getElementById('loginCard').classList.add('hidden');document.getElementById('joinCard').classList.remove('hidden')">
   Join the Pool
 </button>
     </div>
