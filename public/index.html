@@ -1471,7 +1471,18 @@ $("signupForm").onsubmit = async event => {
     authMessage(error.message, true);
     return;
   }
-
+if (data.session?.access_token) {
+  await fetch(
+    "/.netlify/functions/join-status",
+    {
+      method: "POST",
+      headers: {
+        Authorization:
+          `Bearer ${data.session.access_token}`
+      }
+    }
+  );
+}
   const signedInPlayer =
   $("signedInPlayer");
 
