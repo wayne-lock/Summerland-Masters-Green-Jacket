@@ -354,6 +354,7 @@ Pick 14 golfers. Lowest team score wins the jacket.
 
         <button type="submit">Join the Pool</button>
       </form>
+    <button type="button" id="backToSignInBtn">Back to Sign In</button>0
     </div>
 
   </div>
@@ -1533,6 +1534,10 @@ $("forgotPassword").onclick = async () => {
   authMessage(
     "Password reset email sent. Check your inbox."
   );
+};
+  $("backToSignInBtn").onclick = () => {
+  $("joinCard").classList.add("hidden");
+  $("loginCard").classList.remove("hidden");
 };
 $("signOutBtn").onclick = async () => {
   if (!sb) return;
