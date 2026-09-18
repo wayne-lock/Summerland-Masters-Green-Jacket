@@ -1411,7 +1411,21 @@ const { error } = result;
   }
   else {
   const user = result.data?.user;
+const accessToken =
+  result.data?.session?.access_token;
 
+if (accessToken) {
+  await fetch(
+    "/.netlify/functions/join-status",
+    {
+      method: "POST",
+      headers: {
+        Authorization:
+          `Bearer ${accessToken}`
+      }
+    }
+  ).catch(() => {});
+}
   const playerName =
     user?.user_metadata?.player_name ||
     user?.email?.split("@")[0] ||
