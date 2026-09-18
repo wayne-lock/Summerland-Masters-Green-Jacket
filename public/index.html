@@ -1415,16 +1415,26 @@ const accessToken =
   result.data?.session?.access_token;
 
 if (accessToken) {
-  await fetch(
-    "/.netlify/functions/join-status",
-    {
-      method: "POST",
-      headers: {
-        Authorization:
-          `Bearer ${accessToken}`
+  const joinResponse =
+    await fetch(
+      "/.netlify/functions/join-status",
+      {
+        method: "POST",
+        headers: {
+          Authorization:
+            `Bearer ${accessToken}`
+        }
       }
-    }
-  ).catch(() => {});
+    );
+
+  const joinResult =
+    await joinResponse
+      .json()
+      .catch(() => ({}));
+
+  alert(
+    `Join status: ${joinResponse.status} - ${JSON.stringify(joinResult)}`
+  );
 }
   const playerName =
     user?.user_metadata?.player_name ||
