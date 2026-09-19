@@ -471,7 +471,29 @@
         ></div>
 
       </section>
+<section class="card">
+  <h2>Start New Season</h2>
 
+  <p>
+    Clears all submitted teams and scores, and resets
+    participant invitation status to Invited.
+    Login accounts are not deleted.
+  </p>
+
+  <div class="actions">
+    <button
+      id="resetSeasonBtn"
+      type="button"
+    >
+      Start New Season
+    </button>
+  </div>
+
+  <div
+    id="resetSeasonStatus"
+    class="status"
+  ></div>
+</section>
       <section class="card">
 
         <h2>Masters Golfer Field</h2>
@@ -1292,7 +1314,69 @@ $("golferNames")
     "input",
     updateGolferCount
   );
+$("resetSeasonBtn").addEventListener(
+  "click",
+  async () => {
+    const confirmation = window.prompt(
+      'Type RESET to start a new season.'
+    );
 
+    if (confirmation !== "RESET") {
+      $("resetSeasonStatus").textContent =
+        "Reset cancelled.";
+      return;
+    }
+
+    const finalCheck = window.confirm(
+      "This will permanently clear all submitted teams and scores. Continue?"
+    );
+
+    if (!finalCheck) {
+      $("resetSeasonStatus").textContent =
+        "Reset cancelled.";
+      return;
+    }
+
+    const button = $("resetSeasonBtn");
+    button.disabled = true;
+
+    $("resetSeasonStatus").textContent =
+      "Resetting pool...";
+
+    try {
+      const response = await fetch(
+        "/.netlify/functions/admin-reset",
+        {
+          method: "POST",
+          headers: headers(),
+          body: JSON.stringify({
+            confirm: "RESET"
+          })
+        }
+      );
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          result.error || "Reset failed."
+        );
+      }
+
+      $("resetSeasonStatus").textContent =
+        "New season started. Teams and scores cleared.";
+
+      await loadAdmin();
+    }
+    catch (error) {
+      $("resetSeasonStatus").textContent =
+        error.message || "Reset failed.";
+    }
+    finally {
+      button.disabled = false;
+    }
+  }
+);
 </script>
 
 </body>
