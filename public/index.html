@@ -1040,7 +1040,7 @@ $("teamSizeCount").textContent =
         );
 
 
-    if (config.selectionOpen || config.deadline) {
+  if (config.selectionOpen || config.selectionClose || config.deadline) {
   const now = Date.now();
 
   const openTime =
@@ -1049,7 +1049,9 @@ $("teamSizeCount").textContent =
       : null;
 
   const closeTime =
-    config.deadline
+  config.selectionClose
+    ? new Date(config.selectionClose).getTime()
+    : config.deadline
       ? new Date(config.deadline).getTime()
       : null;
 
