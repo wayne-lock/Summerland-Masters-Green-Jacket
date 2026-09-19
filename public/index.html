@@ -1576,6 +1576,9 @@ if (sb) {
     $("poolNav").classList.remove("hidden");
     $("leaderboard").classList.remove("hidden");
     $("signOutBtn").classList.remove("hidden");
+    setTimeout(() => {
+  loadSavedTeam();
+}, 0);
   } else {
     $("authSection").classList.remove("hidden");
     $("joinCard").classList.add("hidden");
