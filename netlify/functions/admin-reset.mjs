@@ -56,7 +56,8 @@ export default async (req) => {
     "teams",
     {}
   );
-
+const teamsAfterReset =
+  await readJSON("teams", {});
   await writeJSON(
     "scores",
     {}
@@ -69,6 +70,8 @@ export default async (req) => {
 
   return Response.json({
     ok: true,
+    teamsRemaining:
+  Object.keys(teamsAfterReset).length,
     message: "Pool season reset completed.",
     invitationsReset:
       Object.keys(resetInvitations).length
