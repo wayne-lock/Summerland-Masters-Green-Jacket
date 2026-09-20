@@ -1222,6 +1222,10 @@ async function loadSavedTeam() {
       );
 
     if (!d.found) {
+      selected = [];
+locked = false;
+renderSelected();
+drawGolfers();
       showStatus(
         "No saved team found for that name."
       );
