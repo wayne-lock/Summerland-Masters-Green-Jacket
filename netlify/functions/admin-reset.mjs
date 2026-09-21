@@ -76,12 +76,7 @@ const teamsAfterReset =
 
   return Response.json({
     ok: true,
-    teamsRemaining:
-  Object.keys(teamsAfterReset).length,
-teamBlobsFound:
-  teamBlobs.length,
-teamKeys:
-  teamBlobs.map(blob => blob.key),
+  
     message: "Pool season reset completed.",
     invitationsReset:
       Object.keys(resetInvitations).length
