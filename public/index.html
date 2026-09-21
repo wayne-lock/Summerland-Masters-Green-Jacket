@@ -1214,7 +1214,7 @@ async function loadSavedTeam() {
     );
 
     const d = await r.json();
-alert(JSON.stringify(d));
+
     if (!r.ok)
       throw new Error(
         d.error ||
