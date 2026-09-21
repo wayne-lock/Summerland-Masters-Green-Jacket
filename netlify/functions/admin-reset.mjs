@@ -1,4 +1,4 @@
-import { readJSON, writeJSON } from "./_store.mjs";
+import { readJSON, writeJSON, store } from "./_store.mjs";
 
 function authorized(req) {
   const adminPin = process.env.ADMIN_PIN;
@@ -51,7 +51,13 @@ export default async (req) => {
       updatedAt: new Date().toISOString()
     };
   }
+const s = store();
+const { blobs: teamBlobs } =
+  await s.list({ prefix: "team-" });
 
+for (const blob of teamBlobs) {
+  await s.delete(blob.key);
+}
   await writeJSON(
     "teams",
     {}
