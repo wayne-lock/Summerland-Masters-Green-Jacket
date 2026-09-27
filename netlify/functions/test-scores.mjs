@@ -41,7 +41,7 @@ export default async (req) => {
           : g.name,
     
       total:
-  [-6, -3, -1, 5, 8][i % 5],
+[-8, -3, -2, 4, 7][i % 5],
       position: null,
   thru: i === 1 ? "CUT" : "F"
     }));
