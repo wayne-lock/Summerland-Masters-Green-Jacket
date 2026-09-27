@@ -39,7 +39,7 @@ export default async (req) => {
         typeof g === "string"
           ? g
           : g.name,
-      total:
+    
       total:
   [-6, -3, -1, 5, 8][i % 5],
       position: null,
