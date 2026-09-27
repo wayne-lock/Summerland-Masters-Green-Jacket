@@ -1301,7 +1301,11 @@ if (d.cutWinner) {
 
   $("cutWinnerScore").textContent =
     "Winning Total: " +
-    displayScore(d.cutWinner.score);
+    (d.cutWinner.score === 0
+  ? "E"
+  : d.cutWinner.score > 0
+    ? "+" + d.cutWinner.score
+    : String(d.cutWinner.score));
 } else {
   $("cutWinnerName").textContent =
     "Winner to be announced";
@@ -1316,7 +1320,11 @@ if (d.jacketWinner) {
 
   $("jacketWinnerScore").textContent =
     "Winning Total: " +
-    displayScore(d.jacketWinner.score);
+    (d.jacketWinner.score === 0
+  ? "E"
+  : d.jacketWinner.score > 0
+    ? "+" + d.jacketWinner.score
+    : String(d.jacketWinner.score));
 } else {
   $("jacketWinnerName").textContent =
     "Winner to be announced";
