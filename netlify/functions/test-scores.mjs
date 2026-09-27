@@ -40,9 +40,10 @@ export default async (req) => {
           ? g
           : g.name,
       total:
-        [-4, -2, 0, 3, 6][i % 5],
+      total:
+  [-6, -3, -1, 5, 8][i % 5],
       position: null,
-  thru: "F"  
+  thru: i === 1 ? "CUT" : "F"
     }));
 
   const winnerId = null;
