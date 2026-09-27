@@ -1295,7 +1295,35 @@ async function loadLeaderboard(){
 
     const d =
       await r.json();
+if (d.cutWinner) {
+  $("cutWinnerName").textContent =
+    d.cutWinner.name;
 
+  $("cutWinnerScore").textContent =
+    "Winning Total: " +
+    displayScore(d.cutWinner.score);
+} else {
+  $("cutWinnerName").textContent =
+    "Winner to be announced";
+
+  $("cutWinnerScore").textContent =
+    "Winning Total: —";
+}
+
+if (d.jacketWinner) {
+  $("jacketWinnerName").textContent =
+    d.jacketWinner.name;
+
+  $("jacketWinnerScore").textContent =
+    "Winning Total: " +
+    displayScore(d.jacketWinner.score);
+} else {
+  $("jacketWinnerName").textContent =
+    "Winner to be announced";
+
+  $("jacketWinnerScore").textContent =
+    "Winning Total: —";
+}
 
     $("prize").textContent =
       "$" + (d.prize || 0);
