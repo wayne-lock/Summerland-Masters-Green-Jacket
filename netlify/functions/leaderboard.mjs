@@ -1,4 +1,4 @@
-import { readJSON } from "./_store.mjs";
+import { readJSON, writeJSON } from "./_store.mjs";
 
 function displayScore(v) {
   if (v === null || v === undefined) return "—";
@@ -74,7 +74,49 @@ const golfers = await readJSON("golfers", []);
         (a.score ?? 9999) -
         (b.score ?? 9999)
     );
+const hasCut =
+  (scoring.players || []).some(p =>
+    String(p.thru || "")
+      .toUpperCase()
+      .includes("CUT")
+  );
 
+let winners =
+  await readJSON("winners", {});
+
+if (
+  hasCut &&
+  !scoring.winnerId &&
+  !winners.cutWinner &&
+  rows.length &&
+  typeof rows[0].score === "number"
+) {
+  winners.cutWinner = {
+    name: rows[0].name,
+    score: rows[0].score
+  };
+
+  await writeJSON(
+    "winners",
+    winners
+  );
+}
+  if (
+  scoring.winnerId &&
+  !winners.jacketWinner &&
+  rows.length &&
+  typeof rows[0].score === "number"
+) {
+  winners.jacketWinner = {
+    name: rows[0].name,
+    score: rows[0].score
+  };
+
+  await writeJSON(
+    "winners",
+    winners
+  );
+}
   const leader =
     rows.find(
       x => x.score !== null
@@ -117,7 +159,8 @@ const overallPrize =
    prize, 
 cutPrize,
 overallPrize,
-
+cutWinner: winners.cutWinner || null,
+jacketWinner: winners.jacketWinner || null,
     entries:
       Object.keys(teams).length,
 
