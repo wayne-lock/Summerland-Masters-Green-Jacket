@@ -759,21 +759,13 @@ if (!participants.length) {
 
     name.textContent =
       participant.name;
+name.className = "removeParticipant";
+name.dataset.key = participant.key;
+name.style.textDecoration = "underline";
+name.style.cursor = "pointer";
+  
 
-    const button =
-      document.createElement("button");
-
-    button.type = "button";
-    button.textContent = "Remove";
-    button.dataset.key =
-      participant.key;
-    button.className =
-      "removeParticipant";
-
-    row.append(
-      name,
-      button
-    );
+  row.append(name);
 
     participantsList.appendChild(row);
   });
