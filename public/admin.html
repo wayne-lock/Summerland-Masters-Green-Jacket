@@ -82,7 +82,19 @@
       resize:vertical;
       line-height:1.5;
     }
+.golferGrid{
+  display:grid;
+  grid-template-columns:repeat(10,minmax(0,1fr));
+  gap:3px 6px;
+  font-size:11px;
+  line-height:1.15;
+  margin:6px 0;
+}
 
+.golferGrid > div{
+  padding:2px;
+  overflow-wrap:anywhere;
+}
     button{
       appearance:none;
       border:1px solid var(--green);
@@ -695,7 +707,21 @@ $("selectionOpen").value =
         : g.name
     )
     .join("\n");
+const golferGrid = $("golferGrid");
 
+golferGrid.innerHTML = "";
+
+golfers.forEach(g => {
+  const cell =
+    document.createElement("div");
+
+  cell.textContent =
+    g.rank
+      ? `${g.rank}. ${g.name}`
+      : g.name;
+
+  golferGrid.appendChild(cell);
+});
     updateGolferCount();
 const participants =
   Array.isArray(participantData.participants)
