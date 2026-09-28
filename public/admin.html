@@ -829,7 +829,46 @@ status.textContent =
   teamSubmitted
     ? "Status: Team Submitted"
     : "Status: Invited";
+const paidButton =
+  document.createElement("button");
 
+paidButton.type = "button";
+
+function showPaidState() {
+  paidButton.textContent =
+    invitation.paid ? "Paid" : "Unpaid";
+
+  paidButton.style.background =
+    invitation.paid ? "#234f3b" : "#d9d9d9";
+
+  paidButton.style.color =
+    invitation.paid ? "white" : "#555";
+}
+
+showPaidState();
+
+paidButton.onclick = async () => {
+  const nextPaid = !invitation.paid;
+
+  const response = await fetch(
+    "/.netlify/functions/admin-invitations",
+    {
+      method: "POST",
+      headers: headers(),
+      body: JSON.stringify({
+        firstName: invitation.firstName,
+        lastName: invitation.lastName,
+        email: invitation.email,
+        paid: nextPaid
+      })
+    }
+  );
+
+  if (!response.ok) return;
+
+  invitation.paid = nextPaid;
+  showPaidState();
+};
   const send =
     document.createElement("a");
 
@@ -889,9 +928,11 @@ remove.onclick = async () => {
   name,
   document.createElement("br"),
   email,
-  status,
-  document.createElement("br"),
-  send,
+status,
+document.createElement("br"),
+paidButton,
+document.createElement("br"),
+send,
   document.createElement("br"),
   document.createElement("br"),
   remove
