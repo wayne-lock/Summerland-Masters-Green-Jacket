@@ -1445,7 +1445,19 @@ $("saveGolfers")
     "click",
     saveGolfers
   );
+$("editGolferField").addEventListener(
+  "click",
+  () => {
+    const field = $("golferNames");
+    const isHidden =
+      field.classList.toggle("hidden");
 
+    $("editGolferField").textContent =
+      isHidden
+        ? "Edit Golfer Field"
+        : "Close Golfer Field";
+  }
+);
 $("golferNames")
   .addEventListener(
     "input",
