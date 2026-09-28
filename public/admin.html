@@ -864,9 +864,17 @@ const teamSubmitted =
   );
 
 status.textContent =
-  teamSubmitted
-    ? "Status: Team Submitted"
-    : "Status: Invited";
+  invitation.paid
+    ? (
+        teamSubmitted
+          ? "Status: Saved • Team Submitted"
+          : "Status: Saved"
+      )
+    : (
+        teamSubmitted
+          ? "Status: Team Submitted"
+          : "Status: Invited"
+      );
 const paidButton =
   document.createElement("button");
 
@@ -906,7 +914,41 @@ paidButton.onclick = async () => {
 
   invitation.paid = nextPaid;
   showPaidState();
-};
+  status.textContent =
+  invitation.paid
+    ? (
+        teamSubmitted
+          ? "Status: Saved • Team Submitted"
+          : "Status: Saved"
+      )
+    : (
+        teamSubmitted
+          ? "Status: Team Submitted"
+          : "Status: Invited"
+      );
+
+remove.classList.toggle(
+  "hidden",
+  !!invitation.paid
+);
+status.textContent =
+  invitation.paid
+    ? (
+        teamSubmitted
+          ? "Status: Saved • Team Submitted"
+          : "Status: Saved"
+      )
+    : (
+        teamSubmitted
+          ? "Status: Team Submitted"
+          : "Status: Invited"
+      );
+
+remove.classList.toggle(
+  "hidden",
+  !!invitation.paid
+);
+  };
   const send =
     document.createElement("a");
 
@@ -922,6 +964,10 @@ const remove =
 
 remove.type = "button";
 remove.textContent = "Remove Invitation";
+remove.classList.toggle(
+  "hidden",
+  !!invitation.paid
+);
 
 remove.onclick = async () => {
   if (
