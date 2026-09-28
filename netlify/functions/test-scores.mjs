@@ -41,15 +41,13 @@ export default async (req) => {
           : g.name,
     
       total:
-[-10, -3, -4, 2, 5][i % 5],
+  [-6, -3, -1, 5, 8][i % 5],
       position: null,
   thru: i === 1 ? "CUT" : "F"
     }));
 
-  const winnerId =
-  players.length
-    ? players[0].id
-    : null;
+  const winnerId = null;
+
     const scoring = {
     eventId: "test",
     eventName: "Masters Test Scoring",
