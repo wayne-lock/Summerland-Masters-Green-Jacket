@@ -748,17 +748,32 @@ const participants =
   Array.isArray(participantData.participants)
     ? participantData.participants
     : [];
-
+const invitations =
+  Array.isArray(invitationData.invitations)
+    ? invitationData.invitations
+    : [];
+    const savedParticipants =
+  participants.filter(participant =>
+    invitations.some(invitation =>
+      invitation.paid &&
+      `${invitation.firstName} ${invitation.lastName}`
+        .trim()
+        .toLowerCase() ===
+      String(participant.name || "")
+        .trim()
+        .toLowerCase()
+    )
+  );
 const participantsList =
   $("participantsList");
 
 participantsList.innerHTML = "";
 
-if (!participants.length) {
+if (!savedParticipants.length) {
   participantsList.textContent =
     "No saved participants.";
 } else {
-  participants.forEach(participant => {
+  savedParticipants.forEach(participant => {
     const row =
       document.createElement("div");
 
@@ -780,10 +795,7 @@ name.style.cursor = "pointer";
     participantsList.appendChild(row);
   });
 }
-  const invitations =
-  Array.isArray(invitationData.invitations)
-    ? invitationData.invitations
-    : [];
+  
 
 const invitationList =
   $("invitationList");
