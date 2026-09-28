@@ -143,19 +143,7 @@ export default async (req) => {
         {}
       );
 
-    if (
-      selectionsHaveOpened(
-        config
-      )
-    ) {
-      return Response.json(
-        {
-          error:
-            "The golfer field is locked because selections have opened."
-        },
-        { status: 423 }
-      );
-    }
+    
 
     const body =
       await req
