@@ -83,6 +83,19 @@ h1{
   font-size:1.25em;
   margin-bottom:6px;
 }
+  .winnerRow{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.winnerPrize{
+  font-size:1.2em;
+  font-weight:700;
+  text-align:center;
+  min-width:90px;
+}
 h2{margin-top:0}
 
 .sub,.muted{color:var(--muted)}
@@ -379,13 +392,29 @@ Pick 14 golfers. Lowest team score wins the jacket.
   </svg>
   Summerland’s Masters Green Jacket Winner
 </h2>
-  <div id="jacketWinnerName">Winner to be announced</div>
-  <div id="jacketWinnerScore">Winning Total: —</div>
+  <div class="winnerRow">
+  <div>
+    <div id="jacketWinnerName">Winner to be announced</div>
+    <div id="jacketWinnerScore">Winning Total: —</div>
+  </div>
+
+  <div id="jacketWinnerPrize" class="winnerPrize">
+    Prize: —
+  </div>
+</div>
 </div>
 <div class="card winnerCard" id="cutWinnerCard">
   <h2>🏆 Friday Cut Leader</h2>
-  <div id="cutWinnerName">Winner to be announced</div>
-  <div id="cutWinnerScore">Winning Total: —</div>
+  <div class="winnerRow">
+  <div>
+    <div id="cutWinnerName">Winner to be announced</div>
+    <div id="cutWinnerScore">Winning Total: —</div>
+  </div>
+
+  <div id="cutWinnerPrize" class="winnerPrize">
+    Prize: —
+  </div>
+</div>
 </div>
 
 
@@ -1306,14 +1335,17 @@ if (d.cutWinner) {
   : d.cutWinner.score > 0
     ? "+" + d.cutWinner.score
     : String(d.cutWinner.score));
+ $("cutWinnerPrize").textContent =
+  "$" + (d.cutPrize || 0) + " PRIZE"; 
 } else {
   $("cutWinnerName").textContent =
     "Winner to be announced";
 
   $("cutWinnerScore").textContent =
     "Winning Total: —";
+  $("cutWinnerPrize").textContent =
+  "Prize: —";
 }
-
 if (d.jacketWinner) {
   $("jacketWinnerName").textContent =
     d.jacketWinner.name;
@@ -1325,12 +1357,16 @@ if (d.jacketWinner) {
   : d.jacketWinner.score > 0
     ? "+" + d.jacketWinner.score
     : String(d.jacketWinner.score));
+  $("jacketWinnerPrize").textContent =
+  "$" + (d.overallPrize || 0) + " PRIZE";
 } else {
   $("jacketWinnerName").textContent =
     "Winner to be announced";
 
   $("jacketWinnerScore").textContent =
     "Winning Total: —";
+  $("jacketWinnerPrize").textContent =
+  "Prize: —";
 }
 
     $("prize").textContent =
