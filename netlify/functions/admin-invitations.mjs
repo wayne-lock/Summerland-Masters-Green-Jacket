@@ -66,6 +66,10 @@ export default async (req) => {
       status:
         invitations[key]?.status ||
         "Invited",
+      paid:
+  typeof body.paid === "boolean"
+    ? body.paid
+    : invitations[key]?.paid ?? false,
       createdAt:
         invitations[key]?.createdAt ||
         new Date().toISOString(),
