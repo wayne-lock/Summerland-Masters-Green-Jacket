@@ -930,10 +930,6 @@ paidButton.onclick = async () => {
           : "Status: Invited"
       );
 
-remove.classList.toggle(
-  "hidden",
-  !!invitation.paid
-);
 status.textContent =
   invitation.paid
     ? (
@@ -951,6 +947,10 @@ remove.classList.toggle(
   "hidden",
   !!invitation.paid
 );
+  send.classList.toggle(
+  "hidden",
+  !!invitation.paid
+);
   };
   const send =
     document.createElement("a");
@@ -962,6 +962,10 @@ remove.classList.toggle(
     `mailto:${encodeURIComponent(invitation.email)}` +
     `?subject=${encodeURIComponent(subject)}` +
     `&body=${encodeURIComponent(body)}`;
+  send.classList.toggle(
+  "hidden",
+  !!invitation.paid
+);
 const remove =
   document.createElement("button");
 
