@@ -24,7 +24,7 @@ export default async (req) => {
   ([key, team]) => ({
     key,
     name: team.name || key,
-    email: team.email || null
+  
   })
 );
 
