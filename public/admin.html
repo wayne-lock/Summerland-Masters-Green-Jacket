@@ -772,17 +772,29 @@ const invitations =
   Array.isArray(invitationData.invitations)
     ? invitationData.invitations
     : [];
+    const savedParticipants =
+  participants.filter(participant =>
+    invitations.some(invitation =>
+      invitation.paid &&
+      String(invitation.email || "")
+        .trim()
+        .toLowerCase() ===
+      String(participant.email || "")
+        .trim()
+        .toLowerCase()
+    )
+  );
   
 const participantsList =
   $("participantsList");
 
 participantsList.innerHTML = "";
 
-if (!participants.length) {
+if (!savedParticipants.length) {
   participantsList.textContent =
     "No saved participants.";
 } else {
-participants.forEach(participant => {
+savedParticipants.forEach(participant => {
     const row =
       document.createElement("div");
 
