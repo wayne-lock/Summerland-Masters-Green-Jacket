@@ -752,28 +752,17 @@ const invitations =
   Array.isArray(invitationData.invitations)
     ? invitationData.invitations
     : [];
-    const savedParticipants =
-  participants.filter(participant =>
-    invitations.some(invitation =>
-      invitation.paid &&
-      `${invitation.firstName} ${invitation.lastName}`
-        .trim()
-        .toLowerCase() ===
-      String(participant.name || "")
-        .trim()
-        .toLowerCase()
-    )
-  );
+  
 const participantsList =
   $("participantsList");
 
 participantsList.innerHTML = "";
 
-if (!savedParticipants.length) {
+if (!participants.length) {
   participantsList.textContent =
     "No saved participants.";
 } else {
-  savedParticipants.forEach(participant => {
+participants.forEach(participant => {
     const row =
       document.createElement("div");
 
