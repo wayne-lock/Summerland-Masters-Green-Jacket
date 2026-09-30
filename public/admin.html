@@ -998,6 +998,8 @@ remove.classList.toggle(
   "hidden",
   !!invitation.paid
 );
+  await loadAdmin();
+};
 const remove =
   document.createElement("button");
 
