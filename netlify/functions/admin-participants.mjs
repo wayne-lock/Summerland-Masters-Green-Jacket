@@ -20,12 +20,13 @@ export default async (req) => {
   const teams = await readJSON("teams", {});
 
   if (req.method === "GET") {
-    const participants = Object.entries(teams).map(
-      ([key, team]) => ({
-        key,
-        name: team.name || key
-      })
-    );
+  const participants = Object.entries(teams).map(
+  ([key, team]) => ({
+    key,
+    name: team.name || key,
+    email: team.email || null
+  })
+);
 
     return Response.json({
       participants
