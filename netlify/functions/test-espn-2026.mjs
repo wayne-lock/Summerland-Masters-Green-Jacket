@@ -1,6 +1,6 @@
 const SCOREBOARD =
 
-  "https://site.api.espn.com/apis/site/v2/sports/golf/pga/scoreboard?dates=20260412";
+  "https://site.api.espn.com/apis/site/v2/sports/golf/pga/scoreboard?dates=20260409";
 
 export default async () => {
 
