@@ -68,7 +68,10 @@ const teamsAfterReset =
     "scores",
     {}
   );
-
+await writeJSON(
+  "winners",
+  {}
+);
   await writeJSON(
     "invitations",
     resetInvitations
