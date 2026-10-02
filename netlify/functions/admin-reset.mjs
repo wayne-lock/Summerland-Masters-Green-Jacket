@@ -48,6 +48,7 @@ export default async (req) => {
     resetInvitations[key] = {
       ...invitation,
       status: "Invited",
+      paid: false,
       updatedAt: new Date().toISOString()
     };
   }
