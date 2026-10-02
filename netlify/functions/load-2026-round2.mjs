@@ -55,8 +55,11 @@ async function getRound2(golfer) {
     );
   }
 
-  const madeCut =
-    rounds.some(r => Number(r.period) === 3);
+  const round3 =
+  rounds.find(r => Number(r.period) === 3);
+
+const madeCut =
+  round3 && scoreToNumber(round3.displayValue) !== null;
 
   return {
     id: String(golfer.id),
