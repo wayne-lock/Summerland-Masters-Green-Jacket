@@ -32,6 +32,7 @@ export default async () => {
       id: String(c.athlete?.id ?? c.id),
       name: c.athlete?.displayName ?? "Unknown",
       rank: index + 1,
+      group: index < 20 ? "top20" : index < 40 ? "next20" : "remaining",
       status: "active"
     }));
 
