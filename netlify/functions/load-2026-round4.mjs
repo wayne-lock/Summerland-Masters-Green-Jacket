@@ -130,7 +130,7 @@ export default async () => {
       eventId: EVENT_ID,
       eventName: "2026 Masters - Round 4",
       players,
-      winnerId: null,
+      winnerId: "3470",
       lastSync: new Date().toISOString(),
       testMode: true
     };
