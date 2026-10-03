@@ -762,37 +762,6 @@ const invitations =
     ? invitationData.invitations
     : [];
   
-const participantsList =
-  $("participantsList");
-
-participantsList.innerHTML = "";
-
-if (!participants.length) {
-  participantsList.textContent =
-    "No saved participants.";
-} else {
-participants.forEach(participant => {
-    const row =
-      document.createElement("div");
-
-    row.className = "actions";
-
-    const name =
-      document.createElement("strong");
-
-    name.textContent =
-      participant.name;
-name.className = "removeParticipant";
-name.dataset.key = participant.key;
-name.style.textDecoration = "underline";
-name.style.cursor = "pointer";
-  
-
-  row.append(name);
-
-    participantsList.appendChild(row);
-  });
-}
   
 
 const invitationList =
