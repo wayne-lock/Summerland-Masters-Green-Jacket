@@ -48,17 +48,17 @@ function validDate(value) {
 }
 
 function calculateRankingCutoff(
-  mastersStartDate
+  selectionOpen
 ) {
-  if (!validDate(mastersStartDate)) {
+  if (!validDate(selectionOpen)) {
     return null;
   }
 
   const date =
-    new Date(mastersStartDate);
+    new Date(selectionOpen);
 
-  date.setMonth(
-    date.getMonth() - 1
+  date.setUTCDate(
+    date.getUTCDate() - 1
   );
 
   return date.toISOString();
@@ -319,7 +319,7 @@ const overallChampionPercent =
 
     const rankingCutoff =
       calculateRankingCutoff(
-        mastersStartDate
+        selectionOpen
       );
 
     const next = {
