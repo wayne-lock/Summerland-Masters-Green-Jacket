@@ -130,12 +130,18 @@ const d = new Date(dateString);
 const windowStart = addDays(startDate, -1);
 const windowEnd = addDays(startDate, 4);
 
-const today = new Intl.DateTimeFormat("en-CA", {
+const parts = new Intl.DateTimeFormat("en-US", {
   timeZone: "America/Vancouver",
   year: "numeric",
   month: "2-digit",
   day: "2-digit"
-}).format(new Date());
+}).formatToParts(new Date());
+
+const part = type =>
+  parts.find(p => p.type === type)?.value;
+
+const today =
+  `${part("year")}-${part("month")}-${part("day")}`;
 
 if (today < windowStart || today > windowEnd) {
   return Response.json({
