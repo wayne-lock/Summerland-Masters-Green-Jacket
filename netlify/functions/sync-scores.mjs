@@ -122,7 +122,7 @@ if (!startDate) {
 }
 
 const addDays = (dateString, days) => {
-  const d = new Date(`${dateString}T00:00:00Z`);
+const d = new Date(dateString);
   d.setUTCDate(d.getUTCDate() + days);
   return d.toISOString().slice(0, 10);
 };
