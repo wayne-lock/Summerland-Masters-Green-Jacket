@@ -15,8 +15,8 @@ const defaults = {
   next20Max: 4,
   third20Max: 5,
 
-  cutLeaderPercent: 20,
-  overallChampionPercent: 80,
+  cutLeaderPercent: 30,
+  overallChampionPercent: 70,
 
   // Kept for compatibility with the
   // existing version of the pool.
