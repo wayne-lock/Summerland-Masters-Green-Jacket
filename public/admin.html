@@ -843,16 +843,16 @@ Wayne`;
   const status =
     document.createElement("div");
 
-  const invitationName =
-  `${invitation.firstName} ${invitation.lastName}`
+  const invitationEmail =
+  String(invitation.email || "")
     .trim()
     .toLowerCase();
 
 const teamSubmitted =
   participants.some(participant =>
-    String(participant.name || "")
+    String(participant.email || "")
       .trim()
-      .toLowerCase() === invitationName
+      .toLowerCase() === invitationEmail
   );
 
 status.textContent =
