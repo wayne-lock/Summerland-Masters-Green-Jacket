@@ -504,7 +504,13 @@ The field size is determined automatically.
     </div>
 
   </div>
-
+<button
+  id="importContact"
+  type="button"
+  style="margin-right:10px;"
+>
+  Import Contact
+</button>
   <button
     id="createInvitation"
     type="button"
@@ -547,7 +553,50 @@ const $ =
   id => document.getElementById(id);
 
 let adminPin = "";
+  const importContactButton = $("importContact");
 
+if (
+  !navigator.contacts ||
+  typeof navigator.contacts.select !== "function"
+) {
+  importContactButton.style.display = "none";
+} else {
+  importContactButton.addEventListener("click", async () => {
+    try {
+      const contacts = await navigator.contacts.select(
+        ["name", "email"],
+        { multiple: false }
+      );
+
+      if (!contacts.length) return;
+
+      const contact = contacts[0];
+
+      const fullName =
+        Array.isArray(contact.name)
+          ? (contact.name[0] || "")
+          : (contact.name || "");
+
+      const nameParts = fullName.trim().split(/\s+/);
+
+      $("inviteFirstName").value =
+        nameParts.shift() || "";
+
+      $("inviteLastName").value =
+        nameParts.join(" ");
+
+      $("inviteEmail").value =
+        Array.isArray(contact.email)
+          ? (contact.email[0] || "")
+          : (contact.email || "");
+
+    } catch (error) {
+      if (error.name !== "AbortError") {
+        console.error("Contact import failed:", error);
+      }
+    }
+  });
+}
 function showStatus(
   element,
   message,
