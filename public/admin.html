@@ -798,13 +798,16 @@ invitations.forEach(invitation => {
     invitation.email
   );
 
-  const subject =
-    "You're invited — 2027 Summerland Masters Golf Pool";
+  const poolYear = config.year ?? 2027;
+const entryFee = config.entryFee ?? 20;
 
-  const body =
+const subject =
+  `You're invited – ${poolYear} Summerland Masters Golf Pool`;
+
+const body =
 `Hi ${invitation.firstName},
 
-You're invited to join the 2027 Summerland Masters Green Jacket Golf Pool.
+You're invited to join the ${poolYear} Summerland Masters Green Jacket Golf Pool.
 
 Use this personalized link:
 
@@ -815,6 +818,9 @@ Tap "Join the Pool" and create your account and password.
 
 If you have played before using this email address:
 Tap "Sign In" and use your existing email address and password. Do not create a new account.
+
+Entry Fee: $${entryFee}
+After joining the pool — or, if you are a returning player, after signing in with your existing account — please e-transfer the $${entryFee} entry fee to waynelock444@hotmail.com.
 
 Once you're in, you can select your team before the deadline.
 
