@@ -714,8 +714,8 @@ fetch(
 fetch(
   "/.netlify/functions/admin-invitations",
   {
-    headers:
-      headers()
+    headers: headers(),
+    cache: "no-store"
   }
 )
 ]);
