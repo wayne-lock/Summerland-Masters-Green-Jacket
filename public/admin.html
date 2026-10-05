@@ -1492,7 +1492,11 @@ try {
       })
     }
   );
-
+showStatus(
+  $("invitationStatus"),
+  "Server replied.",
+  true
+);
   const data = await response.json();
 
   if (!response.ok) {
