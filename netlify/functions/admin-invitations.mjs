@@ -47,15 +47,14 @@ export default async (req) => {
         .trim()
         .toLowerCase();
 
-    if (!firstName || !lastName || !email) {
-      return Response.json(
-        {
-          error:
-            "First name, last name, and email are required."
-        },
-        { status: 400 }
-      );
-    }
+    if (!email) {
+  return Response.json(
+    {
+      error: "Email is required."
+    },
+    { status: 400 }
+  );
+}
 
     const key = email;
 
