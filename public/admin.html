@@ -1476,6 +1476,7 @@ $("createInvitation").onclick = async () => {
   );
   return;
 }
+  let savedInvitation = null;
 try {
   const response = await fetch(
     "/.netlify/functions/admin-invitations",
@@ -1498,6 +1499,7 @@ try {
       "Unable to save invitation."
     );
   }
+  savedInvitation = data.invitation;
 } catch (error) {
   showStatus(
     $("invitationStatus"),
@@ -1542,15 +1544,22 @@ Hope you can join us.
 
 Wayne`;
 
-  $("invitationList").innerHTML = `
-    <div class="card" style="margin-top:12px;">
-      <strong>${firstName || lastName ? `${firstName} ${lastName}`.trim() : email}</strong><br>
-      ${email}<br><br>
-      <a href="mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}">
-        Send Invitation
-      </a>
-    </div>
-  `;
+  const savedEmail = savedInvitation.email || email;
+const savedName =
+  `${savedInvitation.firstName || ""} ${savedInvitation.lastName || ""}`.trim();
+
+$("invitationList").insertAdjacentHTML(
+  "afterbegin",
+  `
+  <div class="card" style="margin-top:12px;">
+    <strong>${savedName || savedEmail}</strong><br>
+    ${savedEmail}<br><br>
+    <a href="mailto:${encodeURIComponent(savedEmail)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}">
+      Send Invitation
+    </a>
+  </div>
+  `
+);
 
   showStatus(
     $("invitationStatus"),
