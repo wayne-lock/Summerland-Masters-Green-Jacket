@@ -1544,9 +1544,9 @@ Hope you can join us.
 
 Wayne`;
 
-  const savedEmail = savedInvitation.email || email;
+  const savedEmail = savedInvitation?.email || email;
 const savedName =
-  `${savedInvitation.firstName || ""} ${savedInvitation.lastName || ""}`.trim();
+  `${savedInvitation?.firstName || ""} ${savedInvitation?.lastName || ""}`.trim();
 
 $("invitationList").insertAdjacentHTML(
   "afterbegin",
