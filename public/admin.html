@@ -553,6 +553,7 @@ const $ =
   id => document.getElementById(id);
 
 let adminPin = "";
+  let adminLoadRun = 0;
   const importContactButton = $("importContact");
 
 if (
@@ -654,6 +655,7 @@ function deadlineForInput(value){
 }
 
 async function loadAdmin(){
+  const thisLoadRun = ++adminLoadRun;
 
   adminPin =
     $("adminPin")
@@ -826,7 +828,7 @@ const invitations =
 
 const invitationList =
   $("invitationList");
-
+if (thisLoadRun !== adminLoadRun) return;
 invitationList.innerHTML = "";
 
 invitations.forEach(invitation => {
@@ -1545,7 +1547,7 @@ Hope you can join us.
 Wayne`;
 
 
-
+adminLoadRun++;
 $("invitationList").innerHTML = `
   <div class="card" style="margin-top:12px;">
     <strong>${email}</strong><br><br>
