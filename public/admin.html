@@ -1512,13 +1512,16 @@ try {
   inviteUrl.searchParams.set("last", lastName);
   inviteUrl.searchParams.set("email", email);
 
-  const subject =
-    "You're invited — 2027 Summerland Masters Golf Pool";
+  const poolYear = config.year ?? 2027;
+const entryFee = config.entryFee ?? 20;
 
-  const body =
-`Hi ${firstName},
+const subject =
+  `You're invited – ${poolYear} Summerland Masters Golf Pool`;
 
-You're invited to join the 2027 Summerland Masters Green Jacket Golf Pool.
+const body =
+`Hi,
+
+You're invited to join the ${poolYear} Summerland Masters Green Jacket Golf Pool.
 
 Use this personalized link:
 
@@ -1530,6 +1533,9 @@ Tap "Join the Pool" and create your account and password.
 If you have played before using this email address:
 Tap "Sign In" and use your existing email address and password. Do not create a new account.
 
+Entry Fee: $${entryFee}
+After joining the pool — or, if you are a returning player, after signing in with your existing account — please e-transfer the $${entryFee} entry fee to waynelock444@hotmail.com.
+
 Once you're in, you can select your team before the deadline.
 
 Hope you can join us.
@@ -1538,7 +1544,7 @@ Wayne`;
 
   $("invitationList").innerHTML = `
     <div class="card" style="margin-top:12px;">
-      <strong>${firstName} ${lastName}</strong><br>
+      <strong>${firstName || lastName ? `${firstName} ${lastName}`.trim() : email}</strong><br>
       ${email}<br><br>
       <a href="mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}">
         Send Invitation
@@ -1551,6 +1557,7 @@ Wayne`;
     "Invitation created.",
     true
   );
+  $("inviteEmail").value = "";
 };
 $("openAdmin")
   .addEventListener(
