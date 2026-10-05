@@ -1546,17 +1546,14 @@ Wayne`;
 
 
 
-$("invitationList").insertAdjacentHTML(
-  "afterbegin",
-  `
+$("invitationList").innerHTML = `
   <div class="card" style="margin-top:12px;">
     <strong>${email}</strong><br><br>
     <a href="mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}">
       Send Invitation
     </a>
   </div>
-  `
-);
+`;
 
   showStatus(
     $("invitationStatus"),
