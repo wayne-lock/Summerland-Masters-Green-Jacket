@@ -1559,7 +1559,7 @@ $("invitationList").innerHTML = `
 
   showStatus(
     $("invitationStatus"),
-    "Invitation created.",
+    "Invitation created. Cards: " + $("invitationList").children.length,
     true
   );
   $("inviteEmail").value = "";
