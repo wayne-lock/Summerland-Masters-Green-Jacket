@@ -1468,14 +1468,14 @@ $("createInvitation").onclick = async () => {
   const lastName = $("inviteLastName").value.trim();
   const email = $("inviteEmail").value.trim().toLowerCase();
 
-  if (!firstName || !lastName || !email) {
-    showStatus(
-      $("invitationStatus"),
-      "Please enter first name, last name, and email.",
-      false
-    );
-    return;
-  }
+  if (!email) {
+  showStatus(
+    $("invitationStatus"),
+    "Please enter an email address.",
+    false
+  );
+  return;
+}
 try {
   const response = await fetch(
     "/.netlify/functions/admin-invitations",
