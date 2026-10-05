@@ -1529,8 +1529,8 @@ showStatus(
   inviteUrl.searchParams.set("last", lastName);
   inviteUrl.searchParams.set("email", email);
 
-  const poolYear = config.year ?? 2027;
-const entryFee = config.entryFee ?? 20;
+  const poolYear = Number($("year").value) || 2027;
+const entryFee = Number($("entryFee").value) || 20;
 
 const subject =
   `You're invited – ${poolYear} Summerland Masters Golf Pool`;
