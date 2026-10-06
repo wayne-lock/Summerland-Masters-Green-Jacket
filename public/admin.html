@@ -1510,11 +1510,7 @@ try {
   );
   return;
 }
-  showStatus(
-  $("invitationStatus"),
-  "Past save block.",
-  true
-);
+  
   const inviteUrl = new URL(window.location.origin + "/");
   inviteUrl.searchParams.set("join", "1");
   inviteUrl.searchParams.set("first", firstName);
